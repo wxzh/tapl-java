@@ -2,23 +2,19 @@ package arith;
 
 import arith.termalg.shared.TermAlgQuery;
 import library.Zero;
+import utils.ZeroFalse;
 
-public interface IsNumericalVal<I> extends TermAlgQuery<I, Boolean> {
+public interface IsNumericalVal<Term> extends TermAlgQuery<Term, Boolean> {
 	@Override
 	default Zero<Boolean> m() {
-		return new Zero<Boolean>() {
-			@Override
-			public Boolean empty() {
-				return false;
-			}
-		};
+		return new ZeroFalse();
 	}
 
 	default Boolean TmZero() {
 		return true;
 	}
 
-	default Boolean TmSucc(I t) {
+	default Boolean TmSucc(Term t) {
 		return visitTerm(t);
 	}
 }

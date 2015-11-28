@@ -11,20 +11,21 @@ import arith.termalg.external.TermAlgMatcher;
 import arith.termalg.external.TermAlgMatcherImpl;
 import arith.termalg.external.TermAlgTermElement;
 import arith.termalg.external.TermAlgTermVisitor;
+import utils.Eval;
 import utils.NoRuleApplies;
 
 public class Tests {
 
-	class E_IsNumericalVal implements IsNumericalVal<TermAlgTermElement>, TermAlgTermVisitor<Boolean> {
+	class IsNumericalValImpl implements IsNumericalVal<TermAlgTermElement>, TermAlgTermVisitor<Boolean> {
 	}
 
-	class E_IsVal implements IsVal<TermAlgTermElement>, TermAlgTermVisitor<Boolean> {
+	class IsValImpl implements IsVal<TermAlgTermElement>, TermAlgTermVisitor<Boolean> {
 	}
 
-	class E_Print implements Print<TermAlgTermElement>, TermAlgTermVisitor<String> {
+	class PrintImpl implements Print<TermAlgTermElement>, TermAlgTermVisitor<String> {
 	}
 
-	class E_Eval1 implements Eval1<TermAlgTermElement>, TermAlgTermVisitor<TermAlgTermElement> {
+	class Eval1Impl implements Eval1<TermAlgTermElement>, TermAlgTermVisitor<TermAlgTermElement> {
 		public arith.termalg.shared.TermAlg<TermAlgTermElement, TermAlgTermElement> alg() {
 			return alg;
 		}
@@ -36,33 +37,33 @@ public class Tests {
 
 		@Override
 		public IsNumericalVal<TermAlgTermElement> isNumericalVal() {
-			return new E_IsNumericalVal();
+			return isNumericalVal;
 		}
 	}
 
-	class E_Eval implements Eval<TermAlgTermElement> {
+	class EvalImpl implements Eval<TermAlgTermElement> {
 		@Override
-		public Eval1<TermAlgTermElement> eval1() {
-			return new E_Eval1();
+		public TermAlgTermElement eval1(TermAlgTermElement e) {
+			return e.accept(eval1);
 		}
 
 		@Override
-		public Print<TermAlgTermElement> print() {
-			return print;
+		public String print(TermAlgTermElement e) {
+			return e.accept(print);
 		}
 
 		@Override
-		public IsVal<TermAlgTermElement> isVal() {
-			return new E_IsVal();
+		public boolean isVal(TermAlgTermElement e) {
+			return e.accept(isVal);
 		}
 	}
 
 	private TermAlgFactory alg = new TermAlgFactory();
-	private E_Print print = new E_Print();
-	private E_IsNumericalVal isNumericalVal = new E_IsNumericalVal();
-	private E_IsVal isVal = new E_IsVal();
-	private E_Eval1 eval1 = new E_Eval1();
-	private E_Eval eval = new E_Eval();
+	private PrintImpl print = new PrintImpl();
+	private IsNumericalValImpl isNumericalVal = new IsNumericalValImpl();
+	private IsValImpl isVal = new IsValImpl();
+	private Eval1Impl eval1 = new Eval1Impl();
+	private EvalImpl eval = new EvalImpl();
 
 	private TermAlgTermElement t = alg.TmTrue();
 	private TermAlgTermElement f = alg.TmFalse();

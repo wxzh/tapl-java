@@ -1,6 +1,15 @@
 package arith;
 
-public interface IsVal<I> extends IsNumericalVal<I> {
+import arith.termalg.shared.TermAlgQuery;
+import library.Zero;
+import utils.ZeroFalse;
+
+public interface IsVal<Term> extends TermAlgQuery<Term, Boolean>, IsNumericalVal<Term> {
+	@Override
+	default Zero<Boolean> m() {
+		return new ZeroFalse();
+	}
+
 	@Override
 	default Boolean TmTrue() {
 		return true;
