@@ -23,6 +23,10 @@ public class Tests {
 	}
 
 	class PrintImpl implements Print<TermAlgTermElement>, TermAlgTermVisitor<String> {
+		@Override
+		public TermAlgMatcher<TermAlgTermElement, String> matcher() {
+			return new TermAlgMatcherImpl<>();
+		}
 	}
 
 	class Eval1Impl implements Eval1<TermAlgTermElement>, TermAlgTermVisitor<TermAlgTermElement> {
@@ -78,7 +82,7 @@ public class Tests {
 	@Test
 	public void printTest() {
 		assertEquals("if false then true else false", if_f_then_t_else_f.accept(print));
-		assertEquals("iszero(pred(succ(succ(0))))", iszero_pred_succ_succ_0.accept(print));
+		assertEquals("(iszero (pred 2))", iszero_pred_succ_succ_0.accept(print));
 	}
 
 	@Test
@@ -108,7 +112,7 @@ public class Tests {
 	public void evalTest() {
 		assertEquals("true", eval.eval(t).accept(print));
 		assertEquals("false", eval.eval(if_f_then_t_else_f).accept(print));
-		assertEquals("succ(0)", eval.eval(succ_pred_0).accept(print));
+		assertEquals("1", eval.eval(succ_pred_0).accept(print));
 		assertEquals("0", eval.eval(pred_succ_0).accept(print));
 		assertEquals("false", eval.eval(iszero_pred_succ_succ_0).accept(print));
 	}
