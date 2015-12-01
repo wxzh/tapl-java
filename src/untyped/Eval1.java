@@ -1,27 +1,24 @@
 package untyped;
 
+import library.Zero;
 import untyped.termalg.external.TermAlgMatcher;
-import untyped.termalg.shared.TermAlgTransform;
-import utils.NoRuleApplies;
+import untyped.termalg.shared.TermAlgQuery;
+import utils.ZeroNoRuleApplies;
 
-public interface Eval1<Term> extends TermAlgTransform<Term> {
+public interface Eval1<Term> extends TermAlgQuery<Term, Term> {
+	untyped.termalg.shared.TermAlg<Term, Term> alg();
 	IsVal<Term> isVal();
+	TmMap<Term> tmMap();
 	TermAlgMatcher<Term, Term> matcher();
 
-	interface VarMapper<E> {
-		E apply(int c, int x, int n);
+	default Zero<Term> m() {
+		return new ZeroNoRuleApplies<>();
 	}
 
-	default Term tmMap(VarMapper<Term> onVar, int c, Term t) {
-		return matcher().TmVar((x, n) -> onVar.apply(c, x, n))
-				.TmAbs((x, t2) -> alg().TmAbs(x, tmMap(onVar, c + 1, t2)))
-				.TmApp((t1, t2) -> alg().TmApp(tmMap(onVar, c, t1), tmMap(onVar, c, t1))).otherwise(() -> t)
-				.visitTerm(t);
-
-	}
 
 	default Term termShiftAbove(int d, int c, Term t) {
-		return tmMap((c1, x, n) -> x >= c1 ? alg().TmVar(x + d, n + d) : alg().TmVar(x, n + d), c, t);
+		return tmMap().visitTerm(t).apply(new TmMapCtx<Term>()
+				.setOnVar((c1, x, n) -> x >= c1 ? alg().TmVar(x + d, n + d) : alg().TmVar(x, n + d)).setC(c).setT(t));
 	}
 
 	default Term termShift(int d, Term t) {
@@ -29,7 +26,8 @@ public interface Eval1<Term> extends TermAlgTransform<Term> {
 	}
 
 	default Term termSubst(int j, Term s, Term t) {
-		return tmMap((c, x, n) -> x == c ? termShift(j, s) : alg().TmVar(x, n), j, t);
+		return tmMap().visitTerm(t).apply(new TmMapCtx<Term>()
+				.setOnVar((c, x, n) -> x == (j + c) ? termShift(c, s) : alg().TmVar(x, n)).setC(0).setT(t));
 	}
 
 	default Term termSubstTop(Term s, Term t) {
@@ -38,19 +36,10 @@ public interface Eval1<Term> extends TermAlgTransform<Term> {
 
 	default Term TmApp(Term t1, Term t2) {
 		return matcher()
-				.TmAbs((x, t) ->
-					isVal().visitTerm(t2) ? termSubstTop(t2, t) : (isVal().visitTerm(t1) ? alg().TmApp(t1, visitTerm(t2)) : alg().TmApp(visitTerm(t1), t2)))
-				.otherwise(() ->
-					isVal().visitTerm(t1) ? alg().TmApp(t1, visitTerm(t2)) : alg().TmApp(visitTerm(t1), t2))
+				.TmAbs((x, t) -> isVal().visitTerm(t2) ? termSubstTop(t2, t)
+						: (isVal().visitTerm(t1) ? alg().TmApp(t1, visitTerm(t2)) : alg().TmApp(visitTerm(t1), t2)))
+				.otherwise(
+						() -> isVal().visitTerm(t1) ? alg().TmApp(t1, visitTerm(t2)) : alg().TmApp(visitTerm(t1), t2))
 				.visitTerm(t1);
-	}
-
-	@Override
-	default Term TmAbs(String x, Term t) {
-		throw new NoRuleApplies("TmAbs: " + x);
-	}
-
-	default Term TmVar(int x, int n) {
-		throw new NoRuleApplies("TmVar: " + x);
 	}
 }
