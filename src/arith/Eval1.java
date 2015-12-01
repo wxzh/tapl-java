@@ -1,11 +1,18 @@
 package arith;
 
 import arith.termalg.external.TermAlgMatcher;
-import arith.termalg.shared.TermAlgTransform;
+import arith.termalg.shared.TermAlgQuery;
+import library.Zero;
+import utils.ZeroNoRuleApplies;
 
-public interface Eval1<Term> extends TermAlgTransform<Term>, Eval1Bool<Term>, Eval1Nat<Term> {
+public interface Eval1<Term> extends TermAlgQuery<Term, Term>, Eval1Bool<Term>, Eval1Nat<Term> {
 	TermAlgMatcher<Term, Term> matcher();
+	arith.termalg.shared.TermAlg<Term, Term> alg();
 	IsNumericalVal<Term> isNumericalVal();
+
+	default Zero<Term> m() {
+		return new ZeroNoRuleApplies<>();
+	}
 
 	@Override
 	default Term TmIsZero(Term t) {

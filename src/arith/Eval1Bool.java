@@ -1,10 +1,10 @@
 package arith;
 
 import arith.boolalg.external.BoolAlgMatcher;
-import arith.boolalg.shared.BoolAlgTransform;
-import utils.NoRuleApplies;
+import arith.boolalg.shared.BoolAlgQuery;
 
-public interface Eval1Bool<I> extends BoolAlgTransform<I> {
+public interface Eval1Bool<I> extends BoolAlgQuery<I, I> {
+	arith.boolalg.shared.BoolAlg<I, I> alg();
 	BoolAlgMatcher<I, I> matcher();
 
 	@Override
@@ -14,15 +14,5 @@ public interface Eval1Bool<I> extends BoolAlgTransform<I> {
 				.TmFalse(() -> t3)
 				.otherwise(() -> alg().TmIf(visitTerm(t1), t2, t3))
 				.visitTerm(t1);
-	}
-
-	@Override
-	default I TmTrue() {
-		throw new NoRuleApplies("TmTrue");
-	}
-
-	@Override
-	default I TmFalse() {
-		throw new NoRuleApplies("TmFalse");
 	}
 }
