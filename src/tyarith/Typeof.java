@@ -1,14 +1,19 @@
 package tyarith;
 
 import arith.termalg.shared.TermAlgQuery;
+import library.Zero;
 import tyarith.tyalg.external.TyAlgMatcher;
-import utils.TypeError;
+import utils.ZeroTypeError;
 
 interface Typeof<Term, Ty> extends TermAlgQuery<Term, Ty> {
 	tyarith.tyalg.shared.TyAlg<Ty, Ty> ty();
 	TyAlgMatcher<Ty, Ty> matcher();
 	TEqual<Ty> tEqual(Ty other);
 
+	@Override
+	default Zero<Ty> m() {
+		return new ZeroTypeError<>();
+	}
 
 	@Override
 	default Ty TmTrue() {
@@ -23,13 +28,8 @@ interface Typeof<Term, Ty> extends TermAlgQuery<Term, Ty> {
 	@Override
 	default Ty TmIf(Term t1, Term t2, Term t3) {
 		return matcher()
-				.TyBool(() -> {
-					if (tEqual(visitTerm(t2)).visitTy(visitTerm(t1)))
-						return visitTerm(t2);
-					else
-						throw new TypeError("arms of conditional have different tyeps");
-				})
-				.otherwise(() -> { throw new TypeError("guard of conditional not a boolean"); })
+				.TyBool(() -> tEqual(visitTerm(t2)).visitTy(visitTerm(t1)) ? visitTerm(t2) : m().empty())
+				.otherwise(() -> m().empty())
 				.visitTy(visitTerm(t1));
 	}
 
@@ -42,7 +42,7 @@ interface Typeof<Term, Ty> extends TermAlgQuery<Term, Ty> {
 	default Ty TmSucc(Term t) {
 		return matcher()
 				.TyNat(() -> ty().TyNat())
-				.otherwise(() -> { throw new TypeError("argument of succ is not a number"); })
+				.otherwise(() -> m().empty())
 				.visitTy(visitTerm(t));
 	}
 
@@ -50,7 +50,7 @@ interface Typeof<Term, Ty> extends TermAlgQuery<Term, Ty> {
 	default Ty TmPred(Term t) {
 		return matcher()
 				.TyNat(() -> ty().TyNat())
-				.otherwise(() -> { throw new TypeError("argument of pred is not a number"); })
+				.otherwise(() -> m().empty())
 				.visitTy(visitTerm(t));
 	}
 
@@ -58,7 +58,7 @@ interface Typeof<Term, Ty> extends TermAlgQuery<Term, Ty> {
 	default Ty TmIsZero(Term t) {
 		return matcher()
 				.TyNat(() -> ty().TyBool())
-				.otherwise(() -> { throw new TypeError("argument of iszero is not a number"); })
+				.otherwise(() -> m().empty())
 				.visitTy(visitTerm(t));
 	}
 }
