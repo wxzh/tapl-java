@@ -1,15 +1,13 @@
 package untyped;
 
-public class TmMapCtx<Term> {
-	interface VarMapper<I> {
-		I apply(int c, int x, int n);
-	}
+import java.util.function.Function;
 
-	VarMapper<Term> f;
+public class TmMapCtx<Term> {
+	Function<Integer, Function<Integer, Function<Integer, Term>>> f;
 	int c;
 	Term t;
 
-	public TmMapCtx<Term> setOnVar(VarMapper<Term> f) {
+	public TmMapCtx<Term> setOnVar(Function<Integer, Function<Integer, Function<Integer, Term>>> f) {
 		this.f = f;
 		return this;
 	}
@@ -25,6 +23,6 @@ public class TmMapCtx<Term> {
 	}
 
 	public Term mapVar(int x, int n) {
-		return f.apply(c, x, n);
+		return f.apply(c).apply(x).apply(n);
 	}
 }

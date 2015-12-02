@@ -15,10 +15,9 @@ public interface Eval1<Term> extends TermAlgQuery<Term, Term> {
 		return new ZeroNoRuleApplies<>();
 	}
 
-
 	default Term termShiftAbove(int d, int c, Term t) {
 		return tmMap().visitTerm(t).apply(new TmMapCtx<Term>()
-				.setOnVar((c1, x, n) -> x >= c1 ? alg().TmVar(x + d, n + d) : alg().TmVar(x, n + d)).setC(c).setT(t));
+				.setOnVar(c1 -> x -> n -> x >= c1 ? alg().TmVar(x + d, n + d) : alg().TmVar(x, n + d)).setC(c).setT(t));
 	}
 
 	default Term termShift(int d, Term t) {
@@ -27,7 +26,7 @@ public interface Eval1<Term> extends TermAlgQuery<Term, Term> {
 
 	default Term termSubst(int j, Term s, Term t) {
 		return tmMap().visitTerm(t).apply(new TmMapCtx<Term>()
-				.setOnVar((c, x, n) -> x == (j + c) ? termShift(c, s) : alg().TmVar(x, n)).setC(0).setT(t));
+				.setOnVar(c -> x -> n -> x == (j + c) ? termShift(c, s) : alg().TmVar(x, n)).setC(0).setT(t));
 	}
 
 	default Term termSubstTop(Term s, Term t) {

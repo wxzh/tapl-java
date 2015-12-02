@@ -4,9 +4,9 @@
 
 - ~~arith~~ (chapters 3, 4)
 - ~~untyped~~ (chapters 5 - 7)
-- `fulluntyped` (chapters 5 - 7)
+- ~~fulluntyped~~ (chapters 5 - 7)
 - ~~tyarith~~ (chapter 8)
-- `simplebool` (chapter 10)
+- ~~simplebool~~ (chapter 10)
 - `fullsimple` (chapter 9 and 11)
 - `fullref` (chapter 13, 18)
 - `fullerror` (chapter 14)

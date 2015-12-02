@@ -6,26 +6,20 @@ import java.util.stream.IntStream;
 
 import library.Tuple2;
 
-public class Context<Bind> {
-	private List<Tuple2<String, Bind>> binds;
-	private BindingAlg<Bind> alg;
+public abstract class Context<Bind> {
+	protected List<Tuple2<String, Bind>> binds;
+	protected BindingAlg<Bind> alg;
 
 	public int length() {
 		return binds.size();
 	}
 
-	public Context() {
-		this.binds = new ArrayList<>();
-	}
-
-	public Context(List<Tuple2<String, Bind>> binds) {
-		this.binds = new ArrayList<>(binds);
-	}
+	public abstract Context<Bind> create(List<Tuple2<String, Bind>> binds);
 
 	public Context<Bind> addBinding(String name, Bind bind) {
 		List<Tuple2<String, Bind>> binds2 = new ArrayList<>(binds);
 		binds2.add(0, new Tuple2<>(name, bind));
-		return new Context<>(binds2);
+		return create(binds2);
 	}
 
 	public Context<Bind> addName(String name) {
