@@ -4,7 +4,7 @@ import arith.termalg.shared.TermAlgQuery;
 import library.Zero;
 import utils.ZeroFalse;
 
-public interface IsNumericalVal<Term> extends TermAlgQuery<Term, Boolean> {
+public interface IsNumericVal<Term> extends TermAlgQuery<Term, Boolean> {
 	@Override
 	default Zero<Boolean> m() {
 		return new ZeroFalse();

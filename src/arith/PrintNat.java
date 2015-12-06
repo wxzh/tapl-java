@@ -1,9 +1,9 @@
 package arith;
 
-import arith.termalg.external.TermAlgMatcher;
+import arith.natalg.external.NatAlgMatcher;
 
 public interface PrintNat<Term> extends arith.natalg.shared.NatAlg<Term, String>{
-	TermAlgMatcher<Term, String> matcher();
+	NatAlgMatcher<Term, String> matcher();
 
 	default String TmZero() {
 		return "0";

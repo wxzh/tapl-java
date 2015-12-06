@@ -5,12 +5,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import fulluntyped.termalg.external.TermAlgMatcher;
 import library.Tuple2;
 import untyped.Context;
 
-public interface Print<Bind, Term> extends fulluntyped.termalg.shared.TermAlg<Term, Function<Context<Bind>, String>>, untyped.Print<Term, Bind> {
-	fulluntyped.termalg.shared.TermAlg<Term, Term> alg();
-	arith.Print<Term> arithPrinter();
+// TODO: The only way to reuse PrintArith is to extend it; delegation would not work
+public interface Print<Term, Bind> extends fulluntyped.termalg.shared.TermAlg<Term, Function<Context<Bind>, String>>, untyped.Print<Term, Bind> {
+	TermAlgMatcher<Term, String> matcher();
 
 	default Function<Context<Bind>, String> TmString(String s) {
 		return ctx -> s;
@@ -29,43 +30,50 @@ public interface Print<Bind, Term> extends fulluntyped.termalg.shared.TermAlg<Te
 	}
 
 	default Function<Context<Bind>, String> TmLet(String x, Term t1, Term t2) {
-		return ctx -> "let " + x + visitTerm(t1).apply(ctx) + " in " + visitTerm(t2).apply(ctx.addName(x));
+		return ctx -> "let " + x + "=" + visitTerm(t1).apply(ctx) + " in " + visitTerm(t2).apply(ctx.addName(x));
 	}
 
 	default Function<Context<Bind>, String> TmFloat(float f) {
 		return ctx -> String.valueOf(f);
 	}
 
-	// delegation
 	default Function<Context<Bind>, String> TmTimesFloat(Term t1, Term t2) {
 		return ctx -> "timesfloat " + visitTerm(t1).apply(ctx) + " " + visitTerm(t2).apply(ctx);
 	}
 
 	default Function<Context<Bind>, String> TmTrue() {
-		return ctx -> arithPrinter().visitTerm(alg().TmTrue());
+		return ctx -> "true";
 	}
 
 	default Function<Context<Bind>, String> TmFalse() {
-		return ctx -> arithPrinter().visitTerm(alg().TmFalse());
+		return ctx -> "false";
 	}
 
 	default Function<Context<Bind>, String> TmIf(Term t1, Term t2, Term t3) {
-		return ctx -> arithPrinter().visitTerm(alg().TmIf(t1, t2, t3));
+		return ctx -> "if " + visitTerm(t1).apply(ctx) + " then " + visitTerm(t2).apply(ctx) + " else " + visitTerm(t3).apply(ctx);
 	}
 
 	default Function<Context<Bind>, String> TmZero() {
-		return ctx -> arithPrinter().visitTerm(alg().TmZero());
+		return ctx -> "0";
 	}
 
 	default Function<Context<Bind>, String> TmSucc(Term t) {
-		return ctx -> arithPrinter().visitTerm(alg().TmSucc(t));
+		return ctx -> printConsecutiveSuccs(ctx, 1, t);
+	}
+
+	default String printConsecutiveSuccs(Context<Bind> ctx, int i, Term t) {
+		return matcher()
+				.TmSucc(t1 -> printConsecutiveSuccs(ctx, i+1, t1))
+				.TmZero(() -> String.valueOf(i))
+				.otherwise(() -> "(succ " + visitTerm(t).apply(ctx) + ")")
+				.visitTerm(t);
 	}
 
 	default Function<Context<Bind>, String> TmPred(Term t) {
-		return ctx -> arithPrinter().visitTerm(alg().TmPred(t));
+		return ctx -> "(pred " + visitTerm(t).apply(ctx) + ")";
 	}
 
 	default Function<Context<Bind>, String> TmIsZero(Term t) {
-		return ctx -> arithPrinter().visitTerm(alg().TmIsZero(t));
+		return ctx -> "(iszero " + visitTerm(t).apply(ctx);
 	}
 }

@@ -16,14 +16,13 @@ import utils.NoRuleApplies;
 
 public class Tests {
 
-	class IsNumericalValImpl implements IsNumericalVal<TermAlgTermElement>, TermAlgTermVisitor<Boolean> {
+	class IsNumericalValImpl implements IsNumericVal<TermAlgTermElement>, TermAlgTermVisitor<Boolean> {
 	}
 
 	class IsValImpl implements IsVal<TermAlgTermElement>, TermAlgTermVisitor<Boolean> {
 	}
 
 	class PrintImpl implements Print<TermAlgTermElement>, TermAlgTermVisitor<String> {
-		@Override
 		public TermAlgMatcher<TermAlgTermElement, String> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
@@ -40,7 +39,7 @@ public class Tests {
 		}
 
 		@Override
-		public IsNumericalVal<TermAlgTermElement> isNumericalVal() {
+		public IsNumericVal<TermAlgTermElement> isNumericVal() {
 			return isNumericalVal;
 		}
 	}

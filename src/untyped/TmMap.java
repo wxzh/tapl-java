@@ -2,15 +2,15 @@ package untyped;
 
 import java.util.function.Function;
 
+import library.Tuple2;
 import untyped.termalg.shared.G_TermAlgTransform;
 
-public interface TmMap<Term> extends G_TermAlgTransform<TmMapCtx<Term>, Term> {
-	default Function<TmMapCtx<Term>, Term> TmVar(int x, int n) {
-		return ctx -> ctx.mapVar(x, n);
+public interface TmMap<Term> extends G_TermAlgTransform<Tuple2<Function<Integer, Function<Integer, Function<Integer, Term>>>, Integer>, Term> {
+	default Function<Tuple2<Function<Integer, Function<Integer, Function<Integer, Term>>>, Integer>, Term> TmVar(int x, int n) {
+		return pair -> pair._1.apply(pair._2).apply(x).apply(n);
 	}
 
-	@Override
-	default Function<TmMapCtx<Term>, Term> TmAbs(String x, Term t) {
-		return ctx -> visitTerm(t).apply(ctx.setC(ctx.c + 1));
+	default Function<Tuple2<Function<Integer, Function<Integer, Function<Integer, Term>>>, Integer>, Term> TmAbs(String x, Term t) {
+		return pair -> alg().TmAbs(x, visitTerm(t).apply(new Tuple2<>(pair._1, pair._2 + 1)));
 	}
 }

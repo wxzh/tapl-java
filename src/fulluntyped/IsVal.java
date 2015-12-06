@@ -21,7 +21,7 @@ public interface IsVal<Term> extends TermAlgQuery<Term, Boolean>, arith.IsVal<Te
 		return true;
 	}
 
-	default Boolean TmRecord(List<Tuple2<String, Term>> p1) {
-		return true;
+	default Boolean TmRecord(List<Tuple2<String, Term>> fields) {
+		return fields.stream().map(pr -> visitTerm(pr._2)).reduce(true, (x, y) -> x && y);
 	}
 }

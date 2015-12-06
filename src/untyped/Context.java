@@ -2,24 +2,40 @@ package untyped;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import library.Tuple2;
 
-public abstract class Context<Bind> {
+// should be pure
+public class Context<Bind> {
 	protected List<Tuple2<String, Bind>> binds;
-	protected BindingAlg<Bind> alg;
+	protected untyped.bindingalg.shared.BindingAlg<Bind, Bind> alg;
+	protected PrintBind<Bind> printBind;
 
 	public int length() {
 		return binds.size();
 	}
 
-	public abstract Context<Bind> create(List<Tuple2<String, Bind>> binds);
+	public Context(untyped.bindingalg.shared.BindingAlg<Bind, Bind> alg, PrintBind<Bind> printBind) {
+		this.alg = alg;
+		this.binds = new ArrayList<>();
+		this.printBind = printBind;
+	}
+
+	private Context(untyped.bindingalg.shared.BindingAlg<Bind, Bind> alg, List<Tuple2<String, Bind>> binds, PrintBind<Bind> printBind) {
+		this(alg, printBind);
+		this.binds = binds;
+	}
+
+	private Context<Bind> setBinds(List<Tuple2<String, Bind>> binds) {
+		return new Context<>(alg, binds, printBind);
+	}
 
 	public Context<Bind> addBinding(String name, Bind bind) {
 		List<Tuple2<String, Bind>> binds2 = new ArrayList<>(binds);
 		binds2.add(0, new Tuple2<>(name, bind));
-		return create(binds2);
+		return setBinds(binds2);
 	}
 
 	public Context<Bind> addName(String name) {
@@ -49,6 +65,6 @@ public abstract class Context<Bind> {
 
 	@Override
 	public String toString() {
-		return binds.toString();
+		return "{" + binds.stream().map(pr -> "(" + pr._1 + "," + printBind.visitBind(pr._2) + ")").collect(Collectors.joining(", ")) + "}";
 	}
 }
