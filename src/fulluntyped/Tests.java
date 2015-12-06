@@ -70,7 +70,7 @@ public class Tests {
 		}
 
 		class TmMapImpl implements TmMap<TermAlgTermElement>,
-				TermAlgTermVisitor<Function<Tuple2<Function<Integer, Function<Integer, Function<Integer, TermAlgTermElement>>>, Integer>, TermAlgTermElement>> {
+				TermAlgTermVisitor<Function<Tuple2<TmMap.VarMapper<TermAlgTermElement>, Integer>, TermAlgTermElement>> {
 			public TermAlg<TermAlgTermElement, TermAlgTermElement> alg() {
 				return fact;
 			}

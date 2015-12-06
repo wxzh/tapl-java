@@ -5,12 +5,10 @@ import library.Tuple2;
 import library.Zero;
 import simplebool.termalg.external.TermAlgMatcher;
 import simplebool.termalg.shared.TermAlgQuery;
-import untyped.TmMap;
 import utils.ZeroNoRuleApplies;
 
-public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, Eval1Bool<Term> {
+public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, Eval1Bool<Term>, ShiftAndSubstTerm<Term, Ty> {
 	IsVal<Term, Ty> isVal();
-	TmMap<Term> tmMap();
 	simplebool.termalg.shared.TermAlg<Term, Ty, Term> alg();
 	TermAlgMatcher<Term, Ty, Term> matcher();
 
@@ -20,7 +18,7 @@ public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, Eval1Bool
 
 	default Term termShiftAbove(int d, int c, Term t) {
 		return tmMap().visitTerm(t).apply(
-				new Tuple2<>(c1 -> x -> n -> x >= c1 ? alg().TmVar(x + d, n + d) : alg().TmVar(x, n + d), c));
+				new Tuple2<>((c1, x, n) -> x >= c1 ? alg().TmVar(x + d, n + d) : alg().TmVar(x, n + d), c));
 	}
 
 	default Term termShift(int d, Term t) {
@@ -29,7 +27,7 @@ public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, Eval1Bool
 
 	default Term termSubst(int j, Term s, Term t) {
 		return tmMap().visitTerm(t)
-				.apply(new Tuple2<>(c -> x -> n -> x == j ? termShift(j, s) : alg().TmVar(x, n), j));
+				.apply(new Tuple2<>((c, x, n) -> x == j ? termShift(j, s) : alg().TmVar(x, n), j));
 	}
 
 	default Term termSubstTop(Term s, Term t) {
