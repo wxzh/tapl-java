@@ -2,12 +2,11 @@ package arith;
 
 import arith.termalg.shared.TermAlgQuery;
 import library.Zero;
-import utils.ZeroFalse;
 
 public interface IsNumericVal<Term> extends TermAlgQuery<Term, Boolean> {
 	@Override
 	default Zero<Boolean> m() {
-		return new ZeroFalse();
+		return () -> false;
 	}
 
 	default Boolean TmZero() {

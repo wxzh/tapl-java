@@ -3,7 +3,7 @@ package arith;
 import arith.termalg.external.TermAlgMatcher;
 import arith.termalg.shared.TermAlgQuery;
 import library.Zero;
-import utils.ZeroNoRuleApplies;
+import utils.NoRuleApplies;
 
 public interface Eval1<Term> extends TermAlgQuery<Term, Term>, Eval1Bool<Term>, Eval1Nat<Term> {
 	TermAlgMatcher<Term, Term> matcher();
@@ -11,7 +11,7 @@ public interface Eval1<Term> extends TermAlgQuery<Term, Term>, Eval1Bool<Term>, 
 	IsNumericVal<Term> isNumericVal();
 
 	default Zero<Term> m() {
-		return new ZeroNoRuleApplies<>();
+		return () -> { throw new NoRuleApplies(); };
 	}
 
 	@Override

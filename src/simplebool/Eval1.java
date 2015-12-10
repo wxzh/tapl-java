@@ -5,15 +5,17 @@ import library.Tuple2;
 import library.Zero;
 import simplebool.termalg.external.TermAlgMatcher;
 import simplebool.termalg.shared.TermAlgQuery;
-import utils.ZeroNoRuleApplies;
+import utils.NoRuleApplies;
 
-public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, Eval1Bool<Term>, ShiftAndSubstTerm<Term, Ty> {
+public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, Eval1Bool<Term>, TermShiftAndSubst<Term, Ty> {
 	IsVal<Term, Ty> isVal();
+	@Override
 	simplebool.termalg.shared.TermAlg<Term, Ty, Term> alg();
+	@Override
 	TermAlgMatcher<Term, Ty, Term> matcher();
 
 	default Zero<Term> m() {
-		return new ZeroNoRuleApplies<>();
+		return () -> { throw new NoRuleApplies(); };
 	}
 
 	default Term termShiftAbove(int d, int c, Term t) {

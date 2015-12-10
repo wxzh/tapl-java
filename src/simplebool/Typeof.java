@@ -2,23 +2,32 @@ package simplebool;
 
 import java.util.function.Function;
 
-import library.Zero;
 import simplebool.termalg.shared.TermAlgQuery;
-import untyped.Context;
-import utils.TypeError;
+import simplebool.tyalg.external.TyAlgMatcher;
+import utils.Context;
 
-public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>> {
+public interface Typeof<Term, Ty, Bind>
+		extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>, utils.Typeof<Term, Ty, Bind> {
+	@Override
 	simplebool.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
-	BindingAlg<Bind, Ty> bindAlg();
+
+	@Override
+	TyAlgMatcher<Ty, Ty> tyMatcher();
+
+	simplebool.bindingalg.shared.BindingAlg<Bind, Ty, Bind> bindAlg();
+
 	GetTypeFromBind<Bind, Ty> getTypeFromBind();
 
-	default Zero<Function<Context<Bind>, Ty>> m() {
-		return new Zero<Function<Context<Bind>, Ty>>() {
-			public Function<Context<Bind>, Ty> empty() {
-				return ctx -> {
-					throw new TypeError();
-				};
-			}
+	@Override
+	TyEqv<Ty, Bind, Term> tyEqv();
+
+	@Override
+	default Function<Context<Bind>, Ty> TmApp(Term t1, Term t2) {
+		return ctx -> {
+			Ty ty1 = visitTerm(t1).apply(ctx);
+			Ty ty2 = visitTerm(t2).apply(ctx);
+			return tyMatcher().TyArr(ty11 -> ty12 -> tyEqv(ctx, ty2, ty11) ? ty12 : m().empty().apply(ctx))
+					.otherwise(() -> m().empty().apply(ctx)).visitTy(ty1);
 		};
 	}
 

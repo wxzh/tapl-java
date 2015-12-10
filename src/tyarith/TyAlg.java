@@ -3,7 +3,6 @@ package tyarith;
 import annotation.Free;
 
 @Free
-public interface TyAlg<Ty> {
-	Ty TyBool();
+public interface TyAlg<Ty> extends utils.TyAlg<Ty> {
 	Ty TyNat();
 }

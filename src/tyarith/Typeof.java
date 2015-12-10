@@ -1,64 +1,52 @@
 package tyarith;
 
+import java.util.function.Function;
+
 import arith.termalg.shared.TermAlgQuery;
 import library.Zero;
 import tyarith.tyalg.external.TyAlgMatcher;
-import utils.ZeroTypeError;
+import utils.Context;
 
-interface Typeof<Term, Ty> extends TermAlgQuery<Term, Ty> {
-	tyarith.tyalg.shared.TyAlg<Ty, Ty> ty();
-	TyAlgMatcher<Ty, Ty> matcher();
-	TEqual<Ty> tEqual(Ty other);
+public interface Typeof<Term, Ty, Bind>
+		extends TermAlgQuery<Term, Function<Context<Bind>, Ty>>, utils.Typeof<Term, Ty, Bind> {
+	@Override
+	tyarith.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
 
 	@Override
-	default Zero<Ty> m() {
-		return new ZeroTypeError<>();
+	TyAlgMatcher<Ty, Ty> tyMatcher();
+
+	@Override
+	TyEqv<Ty> tyEqv();
+
+	@Override
+	default Function<Context<Bind>, Ty> TmIsZero(Term t) {
+		return ctx -> {
+			Ty tyT = visitTerm(t).apply(ctx);
+			return tyEqv(ctx, tyT, tyAlg().TyNat()) ? tyAlg().TyBool() : m().empty().apply(ctx);
+		};
 	}
 
 	@Override
-	default Ty TmTrue() {
-		return ty().TyBool();
+	default Function<Context<Bind>, Ty> TmZero() {
+		return ctx -> tyAlg().TyNat();
 	}
 
 	@Override
-	default Ty TmFalse() {
-		return ty().TyBool();
+	default Function<Context<Bind>, Ty> TmSucc(Term t) {
+		return ctx -> {
+			Ty tyNat = tyAlg().TyNat();
+			Ty tyT = visitTerm(t).apply(ctx);
+			return tyEqv(ctx, tyT, tyNat) ? tyNat : m().empty().apply(ctx);
+		};
 	}
 
 	@Override
-	default Ty TmIf(Term t1, Term t2, Term t3) {
-		return matcher()
-				.TyBool(() -> tEqual(visitTerm(t2)).visitTy(visitTerm(t1)) ? visitTerm(t2) : m().empty())
-				.otherwise(() -> m().empty())
-				.visitTy(visitTerm(t1));
+	default Function<Context<Bind>, Ty> TmPred(Term t) {
+		return TmSucc(t);
 	}
 
 	@Override
-	default Ty TmZero() {
-		return ty().TyNat();
-	}
-
-	@Override
-	default Ty TmSucc(Term t) {
-		return matcher()
-				.TyNat(() -> ty().TyNat())
-				.otherwise(() -> m().empty())
-				.visitTy(visitTerm(t));
-	}
-
-	@Override
-	default Ty TmPred(Term t) {
-		return matcher()
-				.TyNat(() -> ty().TyNat())
-				.otherwise(() -> m().empty())
-				.visitTy(visitTerm(t));
-	}
-
-	@Override
-	default Ty TmIsZero(Term t) {
-		return matcher()
-				.TyNat(() -> ty().TyBool())
-				.otherwise(() -> m().empty())
-				.visitTy(visitTerm(t));
+	default Zero<Function<Context<Bind>, Ty>> m() {
+		return utils.Typeof.super.m();
 	}
 }

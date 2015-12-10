@@ -3,15 +3,15 @@ package untyped;
 import library.Zero;
 import untyped.termalg.external.TermAlgMatcher;
 import untyped.termalg.shared.TermAlgQuery;
-import utils.ZeroNoRuleApplies;
+import utils.NoRuleApplies;
 
-public interface Eval1<Term> extends TermAlgQuery<Term, Term>, ShiftAndSubstTerm<Term> {
+public interface Eval1<Term> extends TermAlgQuery<Term, Term>, TermShiftAndSubst<Term> {
 	untyped.termalg.shared.TermAlg<Term, Term> alg();
 	IsVal<Term> isVal();
 	TermAlgMatcher<Term, Term> matcher();
 
 	default Zero<Term> m() {
-		return new ZeroNoRuleApplies<>();
+		return () -> { throw new NoRuleApplies(); };
 	}
 
 	default Term TmApp(Term t1, Term t2) {
