@@ -3,28 +3,17 @@ package fullsimple;
 import java.util.Optional;
 import java.util.function.Function;
 
-import fullsimple.bindalg.shared.BindAlgQuery;
-import library.Zero;
-import untyped.Context;
+import fullsimple.bindingalg.shared.BindingAlgQuery;
+import utils.Context;
 
-public interface PrintBind<Bind, Term, Ty> extends BindAlgQuery<Bind, Term, Ty, Function<Context<Bind>, String>> {
-	PrintTy<Ty, Bind> printTy();
+public interface PrintBind<Bind, Term, Ty> extends BindingAlgQuery<Bind, Term, Ty, Function<Context<Bind>, String>>, simplebool.PrintBind<Bind, Term, Ty> {
 	Print<Term, Ty, Bind> printTerm();
 
-	default Zero<Function<Context<Bind>, String>> m() {
-		return new Zero<Function<Context<Bind>, String>>() {
-			public Function<Context<Bind>, String> empty() {
-				return ctx -> "";
-			}
-		};
-	}
+	@Override
+	PrintTy<Ty, Bind> printTy();
 
-	default Function<Context<Bind>, String> VarBind(Ty ty) {
-		return ctx -> ": "  + printTy().visitTy(ty);
-	}
-
-	default Function<Context<Bind>, String> TmAbbBind(Term t, Optional<Ty> ty) {
-		return ctx -> "= " + printTerm().visitTerm(t);
+	default Function<Context<Bind>, String> TmAbbBind(Term t, Optional<Ty> tyOpt) {
+		return ctx -> "= " + printTerm().visitTerm(t).apply(ctx) + tyOpt.map(ty -> ": " + printTy().visitTy(ty).apply(ctx)).orElse("");
 	}
 
 	default Function<Context<Bind>, String> TyAbbBind(Ty ty) {

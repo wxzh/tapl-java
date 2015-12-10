@@ -11,12 +11,7 @@ public interface TyEqv<Ty> extends TyAlgQuery<Ty, Function<Ty, Boolean>>, utils.
 
 	@Override
 	default Zero<Function<Ty, Boolean>> m() {
-		return new Zero<Function<Ty, Boolean>>() {
-			@Override
-			public Function<Ty, Boolean> empty() {
-				return ty -> false;
-			}
-		};
+		return () -> ty -> false;
 	}
 
 	@Override
