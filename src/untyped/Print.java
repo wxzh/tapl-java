@@ -3,8 +3,10 @@ package untyped;
 import java.util.function.Function;
 
 import library.Tuple2;
+import utils.Context;
 
 public interface Print<Term, Bind> extends untyped.termalg.shared.TermAlg<Term, Function<Context<Bind>, String>> {
+	PrintBind<Bind> printBind();
 	default Function<Context<Bind>, String> TmAbs(String x, Term t) {
 		return ctx -> {
 			Tuple2<Context<Bind>, String> pr = ctx.pickFreshName(x);
@@ -21,7 +23,7 @@ public interface Print<Term, Bind> extends untyped.termalg.shared.TermAlg<Term, 
 			if (ctx.length() == n)
 				return ctx.index2Name(x);
 			else
-				return "[bad index: " + x + "/" + n + " in " + ctx + "]";
+				return "[bad index: " + x + "/" + n + " in " + ctx.toString(printBind()) + "]";
 		};
 	}
 }

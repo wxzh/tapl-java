@@ -22,7 +22,7 @@ import fulluntyped.termalg.external.TermAlgTermElement;
 import fulluntyped.termalg.external.TermAlgTermVisitor;
 import fulluntyped.termalg.shared.TermAlg;
 import library.Tuple2;
-import untyped.Context;
+import utils.Context;
 import utils.Eval;
 
 public class Tests {
@@ -32,18 +32,18 @@ public class Tests {
 		public TermAlgMatcher<TermAlgTermElement, String> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
+
+		@Override
+		public PrintBind<BindingAlgBindElement<TermAlgTermElement>, TermAlgTermElement> printBind() {
+			return new PrintBindImpl();
+		}
 	}
 
 	class PrintBindImpl implements PrintBind<BindingAlgBindElement<TermAlgTermElement>, TermAlgTermElement>,
-			BindingAlgBindVisitor<String, TermAlgTermElement> {
+			BindingAlgBindVisitor<Function<Context<BindingAlgBindElement<TermAlgTermElement>>, String>, TermAlgTermElement> {
 		@Override
 		public Print<TermAlgTermElement, BindingAlgBindElement<TermAlgTermElement>> printTerm() {
 			return new PrintImpl();
-		}
-
-		@Override
-		public Context<BindingAlgBindElement<TermAlgTermElement>> ctx() {
-			return new Context<>(new BindingAlgFactory<>(), this);
 		}
 	}
 
@@ -114,9 +114,9 @@ public class Tests {
 
 	TermAlgFactory fact = new TermAlgFactory();
 	BindingAlgFactory<TermAlgTermElement> bindFact = new BindingAlgFactory<>();
-	Context<BindingAlgBindElement<TermAlgTermElement>> ctx = new Context<>(new BindingAlgFactory<>(),
-			new PrintBindImpl());
+	Context<BindingAlgBindElement<TermAlgTermElement>> ctx = new Context<>(new BindingAlgFactory<>());
 	PrintImpl print = new PrintImpl();
+	PrintBindImpl printBind = new PrintBindImpl();
 	IsValImpl isVal = new IsValImpl();
 	Eval1Impl eval1 = new Eval1Impl();
 	EvalImpl eval = new EvalImpl();
@@ -135,6 +135,7 @@ public class Tests {
 	TermAlgTermElement o = fact.TmZero();
 	TermAlgTermElement succ_pred_0 = fact.TmSucc(fact.TmPred(o));
 	TermAlgTermElement let_x_t_in_x = fact.TmLet("x", t, x);
+	TermAlgTermElement mixed = fact.TmLet("t", fact.TmApp(proj, t), fact.TmIf(fact.TmVar(0, 1), o, succ_pred_0));
 
 	Context<BindingAlgBindElement<TermAlgTermElement>> ctx2 = ctx.addBinding("x", bindFact.TmAbbBind(t)).addName("y");
 
@@ -152,6 +153,7 @@ public class Tests {
 		assertEquals("0", o.accept(print).apply(ctx));
 		assertEquals("(succ (pred 0))", succ_pred_0.accept(print).apply(ctx));
 		assertEquals("let x=true in x", let_x_t_in_x.accept(print).apply(ctx));
+		assertEquals("let t={x=\\x.x,y=\\x.x \\x.x x}.x true in if t then 0 else (succ (pred 0))", mixed.accept(print).apply(ctx));
 	}
 
 	@Test
@@ -179,13 +181,14 @@ public class Tests {
 		assertEquals("0", eval.eval(o).accept(print).apply(ctx));
 		assertEquals("1", eval.eval(succ_pred_0).accept(print).apply(ctx));
 		assertEquals("true", eval.eval(let_x_t_in_x).accept(print).apply(ctx));
+		assertEquals("0", eval.eval(mixed).accept(print).apply(ctx));
 	}
 
 	@Test
 	public void testContext() throws Exception {
-		assertEquals("{}", ctx.toString());
-		assertEquals("{(x,)}", ctx.addName("x").toString());
-		assertEquals("{(y,), (x,true)}", ctx2.toString());
+		assertEquals("{}", ctx.toString(printBind));
+		assertEquals("{(x,)}", ctx.addName("x").toString(printBind));
+		assertEquals("{(y,), (x,true)}", ctx2.toString(printBind));
 		assertEquals("y", ctx2.index2Name(0));
 		assertEquals("x", ctx2.index2Name(1));
 		assertEquals(0, ctx2.name2Index("y"));

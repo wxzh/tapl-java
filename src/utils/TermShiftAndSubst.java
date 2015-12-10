@@ -2,7 +2,7 @@ package utils;
 
 import library.Tuple2;
 
-public interface ShiftAndSubstTerm<Term> {
+public interface TermShiftAndSubst<Term> {
 	TmMap<Term> tmMap();
 	utils.varalg.shared.VarAlg<Term, Term> alg();
 

@@ -1,11 +1,13 @@
 package fulluntyped;
 
-import untyped.Context;
+import java.util.function.Function;
 
-public interface PrintBind<Bind, Term> extends fulluntyped.bindingalg.shared.BindingAlg<Bind, Term, String>, untyped.PrintBind<Bind> {
-	Context<Bind> ctx();
+import fulluntyped.bindingalg.shared.BindingAlgQuery;
+import utils.Context;
+
+public interface PrintBind<Bind, Term> extends BindingAlgQuery<Bind, Term, Function<Context<Bind>, String>>, untyped.PrintBind<Bind>{
 	Print<Term, Bind> printTerm();
-	default String TmAbbBind(Term t) {
-		return printTerm().visitTerm(t).apply(ctx());
+	default Function<Context<Bind>, String> TmAbbBind(Term t) {
+		return ctx -> printTerm().visitTerm(t).apply(ctx);
 	}
 }
