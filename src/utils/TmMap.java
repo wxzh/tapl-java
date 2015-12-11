@@ -3,9 +3,9 @@ package utils;
 import java.util.function.Function;
 
 import library.Tuple2;
-import utils.varalg.shared.G_VarAlgTransform;
+import utils.varappalg.shared.G_VarAppAlgTransform;
 
-public interface TmMap<Term> extends G_VarAlgTransform<Tuple2<TmMap.VarMapper<Term>, Integer>, Term> {
+public interface TmMap<Term> extends G_VarAppAlgTransform<Tuple2<TmMap.VarMapper<Term>, Integer>, Term> {
 	interface VarMapper<Term> {
 		Term apply(int c, int x, int n);
 	}

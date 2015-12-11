@@ -2,10 +2,9 @@ package simplebool;
 
 import annotation.Free;
 import arith.BoolAlg;
-import utils.VarAlg;
+import utils.VarAppAlg;
 
 @Free
-public interface TermAlg<Term, Ty> extends VarAlg<Term>, BoolAlg<Term> {
+public interface TermAlg<Term, Ty> extends VarAppAlg<Term>, BoolAlg<Term> {
 	Term TmAbs(String x, Ty t, Term e);
-	Term TmApp(Term e1, Term e2);
 }

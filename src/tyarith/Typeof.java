@@ -16,9 +16,6 @@ public interface Typeof<Term, Ty, Bind>
 	TyAlgMatcher<Ty, Ty> tyMatcher();
 
 	@Override
-	TyEqv<Ty> tyEqv();
-
-	@Override
 	default Function<Context<Bind>, Ty> TmIsZero(Term t) {
 		return ctx -> {
 			Ty tyT = visitTerm(t).apply(ctx);

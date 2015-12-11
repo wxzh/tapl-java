@@ -2,13 +2,19 @@ package arith;
 
 import arith.boolalg.external.BoolAlgMatcher;
 import arith.boolalg.shared.BoolAlgQuery;
+import library.Zero;
+import utils.NoRuleApplies;
 
-public interface Eval1Bool<I> extends BoolAlgQuery<I, I> {
-	arith.boolalg.shared.BoolAlg<I, I> alg();
-	BoolAlgMatcher<I, I> matcher();
+public interface Eval1Bool<Term> extends BoolAlgQuery<Term, Term> {
+	arith.boolalg.shared.BoolAlg<Term, Term> alg();
+	BoolAlgMatcher<Term, Term> matcher();
+
+	default Zero<Term> m() {
+		throw new NoRuleApplies();
+	}
 
 	@Override
-	default I TmIf(I t1, I t2, I t3) {
+	default Term TmIf(Term t1, Term t2, Term t3) {
 		return matcher()
 				.TmTrue(() -> t2)
 				.TmFalse(() -> t3)

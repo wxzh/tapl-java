@@ -4,7 +4,7 @@ import library.Tuple2;
 
 public interface TermShiftAndSubst<Term> {
 	TmMap<Term> tmMap();
-	utils.varalg.shared.VarAlg<Term, Term> alg();
+	utils.varappalg.shared.VarAppAlg<Term, Term> alg();
 
 	default Term termShiftAbove(int d, int c, Term t) {
 		return tmMap().visitTerm(t)

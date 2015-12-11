@@ -6,18 +6,13 @@ import arith.boolalg.shared.BoolAlgQuery;
 import library.Zero;
 import utils.tyalg.external.TyAlgMatcher;
 
-public interface Typeof<Term, Ty, Bind> extends BoolAlgQuery<Term, Function<Context<Bind>, Ty>> {
+public interface Typeof<Term, Ty, Bind> extends BoolAlgQuery<Term, Function<Context<Bind>, Ty>>, TyEqv<Ty, Bind> {
 	utils.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
 	TyAlgMatcher<Ty, Ty> tyMatcher();
-	utils.TyEqv<Ty> tyEqv();
-
-	default boolean tyEqv(Context<Bind> ctx, Ty ty1, Ty ty2) {
-		return tyEqv().visitTy(ty1).apply(ty2);
-	}
 
 	@Override
 	default Zero<Function<Context<Bind>, Ty>> m() {
-		return () -> ctx -> { throw new TypeError(); };
+		throw new TypeError();
 	}
 
 	@Override

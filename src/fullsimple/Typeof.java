@@ -11,7 +11,7 @@ import library.Tuple3;
 import utils.Context;
 
 public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>,
-		tyarith.Typeof<Term, Ty, Bind>, simplebool.Typeof<Term, Ty, Bind>, TypeShiftAndSubst<Ty>, SimplifyTy<Ty, Bind, Term> {
+		tyarith.Typeof<Term, Ty, Bind>, simplebool.Typeof<Term, Ty, Bind>, TypeShiftAndSubst<Ty>, TyEqv<Ty, Bind, Term>  {
 
 	@Override
 	TyAlgMatcher<Ty, Ty> tyMatcher();
@@ -21,16 +21,6 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 
 	@Override
 	fullsimple.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
-
-	@Override
-	TyEqv<Ty, Bind, Term> tyEqv();
-
-	@Override
-	default boolean tyEqv(Context<Bind> ctx, Ty ty1, Ty ty2) {
-		Ty tyS1 = simplifyTy(ctx, ty1);
-		Ty tyS2 = simplifyTy(ctx, ty2);
-		return tyEqv().visitTy(tyS1).apply(tyS2);
-	}
 
 	@Override
 	default Function<Context<Bind>, Ty> TmLet(String x, Term t1, Term t2) {
@@ -46,7 +36,7 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 			Ty tyT1 = visitTerm(t1).apply(ctx);
 			Ty tyT2 = visitTerm(t2).apply(ctx);
 			Ty tyFloat = tyAlg().TyFloat();
-			return tyEqv().visitTy(tyT1).apply(tyFloat) && tyEqv().visitTy(tyT2).apply(tyFloat) ? tyFloat
+			return tyEqv(ctx, tyT1, tyFloat) && tyEqv(ctx, tyT2, tyFloat) ? tyFloat
 					: m().empty().apply(ctx);
 		};
 	}
@@ -91,7 +81,7 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 					Ty tyT = visitTerm(t).apply(ctx);
 					return tyEqv(ctx, tyT, tyTExpected) ? ty : m().empty().apply(ctx);
 				}).orElseGet(() -> m().empty().apply(ctx))).otherwise(() -> m().empty().apply(ctx))
-				.visitTy(simplifyTy(ctx, ty));
+				.visitTy(simplifyTy().visitTy(ty).apply(ctx));
 	}
 
 	@Override
@@ -102,7 +92,7 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	@Override
 	default Function<Context<Bind>, Ty> TmCase(Term t, List<Tuple3<String, String, Term>> cases) {
 		return ctx -> {
-			Ty tyT = simplifyTy(ctx, visitTerm(t).apply(ctx));
+			Ty tyT = simplifyTy().visitTy(visitTerm(t).apply(ctx)).apply(ctx);
 			return tyMatcher().TyVariant(fieldsTys -> {
 				if (cases.stream().allMatch(triple -> fieldsTys.stream().anyMatch(pr -> pr._1.equals(triple._1)))) {
 					// all case labels are contained
@@ -126,7 +116,7 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	@Override
 	default Function<Context<Bind>, Ty> TmFix(Term t) {
 		return ctx -> {
-			Ty tyT = simplifyTy(ctx, visitTerm(t).apply(ctx));
+			Ty tyT = simplifyTy().visitTy(visitTerm(t).apply(ctx)).apply(ctx);
 			return tyMatcher().TyArr(ty1 -> ty2 -> tyEqv(ctx, ty1, ty2) ? ty2 : m().empty().apply(ctx))
 					.otherwise(() -> m().empty().apply(ctx)).visitTy(tyT);
 		};

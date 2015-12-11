@@ -1,22 +1,21 @@
 package fullsimple;
 
+import java.util.function.Function;
+
 import fullsimple.bindingalg.external.BindingAlgMatcher;
-import fullsimple.tyalg.external.TyAlgMatcher;
+import fullsimple.tyalg.shared.G_TyAlgTransform;
 import utils.Context;
 
-public interface SimplifyTy<Ty, Bind, Term> {
-	TyAlgMatcher<Ty, Ty> tyMatcher();
-
+// slightly different from the original definition: will simplify all inner TyVars
+public interface SimplifyTy<Ty, Bind, Term> extends G_TyAlgTransform<Context<Bind>, Ty> {
 	BindingAlgMatcher<Bind, Term, Ty, Ty> bindMatcher();
 
-	fullsimple.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
+	@Override
+	default Function<Context<Bind>, Ty> TyVar(int x, int n) {
+		return ctx -> bindMatcher()
+						.TyAbbBind(ty2 -> visitTy(ty2).apply(ctx))
+						.otherwise(() -> alg().TyVar(x, n))
+						.visitBind(ctx.getBinding(x));
 
-	default Ty simplifyTy(Context<Bind> ctx, Ty ty) {
-		return tyMatcher()
-				.TyVar(x -> n -> bindMatcher()
-						.TyAbbBind(ty2 -> simplifyTy(ctx, ty2))
-						.otherwise(() -> tyAlg().TyVar(x, n))
-						.visitBind(ctx.getBinding(x)))
-				.otherwise(() -> ty).visitTy(ty);
 	}
 }

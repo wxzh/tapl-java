@@ -26,11 +26,15 @@ import utils.Context;
 import utils.Eval;
 
 public class Tests {
-
-	class PrintImpl implements Print<ITerm, IBind<ITerm>>,
-			TermVisitor<Function<Context<IBind<ITerm>>, String>> {
+	// compiler bug? should not have conflicts
+	class PrintImpl implements Print<ITerm, IBind<ITerm>>, TermVisitor<Function<Context<IBind<ITerm>>, String>> {
 		public TermAlgMatcher<ITerm, String> matcher() {
 			return new TermAlgMatcherImpl<>();
+		}
+
+		@Override
+		public Function<Context<IBind<ITerm>>, String> visitTerm(ITerm e) {
+			return TermVisitor.super.visitTerm(e);
 		}
 
 		@Override
@@ -186,9 +190,9 @@ public class Tests {
 
 	@Test
 	public void testContext() throws Exception {
-		assertEquals("{}", ctx.toString(printBind));
-		assertEquals("{(x,)}", ctx.addName("x").toString(printBind));
-		assertEquals("{(y,), (x,true)}", ctx2.toString(printBind));
+		assertEquals("{}", ctx.toString(bind -> bind.accept(printBind).apply(ctx)));
+		assertEquals("{(x,)}", ctx.addName("x").toString(bind -> bind.accept(printBind).apply(ctx)));
+		assertEquals("{(y,), (x,true)}", ctx2.toString(bind -> bind.accept(printBind).apply(ctx)));
 		assertEquals("y", ctx2.index2Name(0));
 		assertEquals("x", ctx2.index2Name(1));
 		assertEquals(0, ctx2.name2Index("y"));

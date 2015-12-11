@@ -6,14 +6,9 @@ import java.util.List;
 import fulluntyped.untypedalg.external.UntypedAlgMatcher;
 import fulluntyped.untypedalg.shared.UntypedAlgQuery;
 import library.Tuple2;
-import library.Zero;
 import utils.NoRuleApplies;
 
 public interface Eval1Untyped<Term, Bind> extends UntypedAlgQuery<Term, Term>, arith.Eval1<Term> {
-	default Zero<Term> m() {
-		return arith.Eval1.super.m();
-	}
-
 	IsValUntyped<Term> isVal();
 	UntypedAlgMatcher<Term, Term> matcher();
 	fulluntyped.untypedalg.shared.UntypedAlg<Term, Term> alg();

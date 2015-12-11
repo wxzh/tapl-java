@@ -2,11 +2,11 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import library.Tuple2;
-import untyped.PrintBind;
 
 // should be pure
 public class Context<Bind> {
@@ -62,7 +62,7 @@ public class Context<Bind> {
 		return binds.get(i)._2;
 	}
 
-	public String toString(PrintBind<Bind> printBind) {
-		return "{" + binds.stream().map(pr -> "(" + pr._1 + "," + printBind.visitBind(pr._2).apply(this) + ")").collect(Collectors.joining(", ")) + "}";
+	public String toString(Function<Bind, String> printBind) {
+		return "{" + binds.stream().map(pr -> "(" + pr._1 + "," + printBind.apply(pr._2) + ")").collect(Collectors.joining(", ")) + "}";
 	}
 }

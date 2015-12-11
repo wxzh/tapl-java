@@ -5,7 +5,6 @@ import java.util.function.Function;
 import fulluntyped.termalg.external.TermAlgMatcher;
 import utils.Context;
 
-// TODO: The only way to reuse PrintArith is to extend it; delegation would not work
 public interface Print<Term, Bind> extends fulluntyped.termalg.shared.TermAlg<Term, Function<Context<Bind>, String>>,
 		untyped.Print<Term, Bind>, PrintUntyped<Term, Bind> {
 	@Override
@@ -18,5 +17,4 @@ public interface Print<Term, Bind> extends fulluntyped.termalg.shared.TermAlg<Te
 	default Function<Context<Bind>, String> TmLet(String x, Term t1, Term t2) {
 		return ctx -> "let " + x + "=" + visitTerm(t1).apply(ctx) + " in " + visitTerm(t2).apply(ctx.addName(x));
 	}
-
 }

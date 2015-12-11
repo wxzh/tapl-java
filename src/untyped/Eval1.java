@@ -5,13 +5,16 @@ import untyped.termalg.external.TermAlgMatcher;
 import untyped.termalg.shared.TermAlgQuery;
 import utils.NoRuleApplies;
 
-public interface Eval1<Term> extends TermAlgQuery<Term, Term>, TermShiftAndSubst<Term> {
+public interface Eval1<Term> extends TermAlgQuery<Term, Term>, utils.TermShiftAndSubst<Term> {
+	@Override
 	untyped.termalg.shared.TermAlg<Term, Term> alg();
+	@Override
+	TmMap<Term> tmMap();
 	IsVal<Term> isVal();
 	TermAlgMatcher<Term, Term> matcher();
 
 	default Zero<Term> m() {
-		return () -> { throw new NoRuleApplies(); };
+		throw new NoRuleApplies();
 	}
 
 	default Term TmApp(Term t1, Term t2) {

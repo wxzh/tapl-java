@@ -3,11 +3,17 @@ package arith;
 import arith.natalg.external.NatAlgMatcher;
 import arith.natalg.shared.NatAlg;
 import arith.natalg.shared.NatAlgQuery;
+import library.Zero;
+import utils.NoRuleApplies;
 
 public interface Eval1Nat<Term> extends NatAlgQuery<Term, Term> {
 	NatAlgMatcher<Term, Term> matcher();
 	IsNumericVal<Term> isNumericVal();
 	NatAlg<Term, Term> alg();
+
+	default Zero<Term> m() {
+		throw new NoRuleApplies();
+	}
 
 	@Override
 	default Term TmPred(Term t) {

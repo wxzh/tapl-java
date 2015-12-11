@@ -19,9 +19,6 @@ public interface Typeof<Term, Ty, Bind>
 	GetTypeFromBind<Bind, Ty> getTypeFromBind();
 
 	@Override
-	TyEqv<Ty, Bind, Term> tyEqv();
-
-	@Override
 	default Function<Context<Bind>, Ty> TmApp(Term t1, Term t2) {
 		return ctx -> {
 			Ty ty1 = visitTerm(t1).apply(ctx);
