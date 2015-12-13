@@ -3,15 +3,15 @@ package fulluntyped;
 import java.util.ArrayList;
 import java.util.List;
 
-import fulluntyped.untypedalg.external.UntypedAlgMatcher;
-import fulluntyped.untypedalg.shared.UntypedAlgQuery;
+import fulluntyped.extalg.external.ExtAlgMatcher;
+import fulluntyped.extalg.shared.ExtAlgQuery;
 import library.Tuple2;
-import utils.NoRuleApplies;
 
-public interface Eval1Untyped<Term, Bind> extends UntypedAlgQuery<Term, Term>, arith.Eval1<Term> {
-	IsValUntyped<Term> isVal();
-	UntypedAlgMatcher<Term, Term> matcher();
-	fulluntyped.untypedalg.shared.UntypedAlg<Term, Term> alg();
+public interface Eval1Ext<Term, Bind> extends ExtAlgQuery<Term, Term>, arith.Eval1<Term> {
+	IsValExt<Term> isVal();
+	@Override
+	ExtAlgMatcher<Term, Term> matcher();
+	fulluntyped.extalg.shared.ExtAlg<Term, Term> alg();
 
 	default Term TmRecord(List<Tuple2<String, Term>> fields) {
 		return alg().TmRecord(evalAField(fields));
@@ -19,7 +19,7 @@ public interface Eval1Untyped<Term, Bind> extends UntypedAlgQuery<Term, Term>, a
 
 	default List<Tuple2<String, Term>> evalAField(List<Tuple2<String, Term>> fields) {
 		if (fields.size() == 0)
-			throw new NoRuleApplies();
+			m().empty();
 		Tuple2<String, Term> pair = fields.get(0);
 		List<Tuple2<String, Term>> rest = fields.subList(1, fields.size());
 		List<Tuple2<String, Term>> xs;

@@ -4,11 +4,12 @@ import java.util.function.Function;
 
 import arith.boolalg.shared.BoolAlgQuery;
 import library.Zero;
-import utils.tyalg.external.TyAlgMatcher;
+import utils.tyboolalg.external.TyBoolAlgMatcher;
 
-public interface Typeof<Term, Ty, Bind> extends BoolAlgQuery<Term, Function<Context<Bind>, Ty>>, TyEqv<Ty, Bind> {
-	utils.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
-	TyAlgMatcher<Ty, Ty> tyMatcher();
+public interface Typeof<Term, Ty, Bind> extends BoolAlgQuery<Term, Function<Context<Bind>, Ty>> {
+	utils.tyboolalg.shared.TyBoolAlg<Ty, Ty> tyAlg();
+	TyBoolAlgMatcher<Ty, Ty> tyMatcher();
+	TyEqv<Ty> tyEqv();
 
 	@Override
 	default Zero<Function<Context<Bind>, Ty>> m() {
@@ -19,10 +20,10 @@ public interface Typeof<Term, Ty, Bind> extends BoolAlgQuery<Term, Function<Cont
 	default Function<Context<Bind>, Ty> TmIf(Term t1, Term t2, Term t3) {
 		return ctx -> {
 			Ty ty1 = visitTerm(t1).apply(ctx);
-			if (tyEqv(ctx, ty1, tyAlg().TyBool())) {
+			if (tyEqv().visitTy(ty1).apply(tyAlg().TyBool())) {
 				Ty ty2 = visitTerm(t2).apply(ctx);
 				Ty ty3 = visitTerm(t3).apply(ctx);
-				if (tyEqv(ctx, ty2, ty3))
+				if (tyEqv().visitTy(ty2).apply(ty3))
 					return ty2;
 			}
 			return m().empty().apply(ctx);

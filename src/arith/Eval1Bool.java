@@ -9,6 +9,7 @@ public interface Eval1Bool<Term> extends BoolAlgQuery<Term, Term> {
 	arith.boolalg.shared.BoolAlg<Term, Term> alg();
 	BoolAlgMatcher<Term, Term> matcher();
 
+	@Override
 	default Zero<Term> m() {
 		throw new NoRuleApplies();
 	}

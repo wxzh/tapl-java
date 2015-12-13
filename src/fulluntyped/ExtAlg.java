@@ -5,8 +5,9 @@ import java.util.List;
 import annotation.Free;
 import library.Tuple2;
 
+// simple extensions
 @Free
-public interface UntypedAlg<Term> extends arith.TermAlg<Term> {
+public interface ExtAlg<Term> extends arith.TermAlg<Term> {
 	Term TmRecord(List<Tuple2<String, Term>> fields);
 	Term TmProj(Term t, String l);
 	Term TmFloat(float f);

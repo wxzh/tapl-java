@@ -2,10 +2,10 @@ package fulluntyped;
 
 import java.util.List;
 
-import fulluntyped.untypedalg.shared.UntypedAlgQuery;
+import fulluntyped.extalg.shared.ExtAlgQuery;
 import library.Tuple2;
 
-public interface IsValUntyped<Term> extends UntypedAlgQuery<Term, Boolean>, untyped.IsVal<Term> {
+public interface IsValExt<Term> extends ExtAlgQuery<Term, Boolean>, untyped.IsVal<Term> {
 	default Boolean TmFloat(float p1) {
 		return true;
 	}

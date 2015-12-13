@@ -5,12 +5,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import fulluntyped.untypedalg.external.UntypedAlgMatcher;
+import fulluntyped.extalg.external.ExtAlgMatcher;
 import library.Tuple2;
 import utils.Context;
 
-public interface PrintUntyped<Term, Bind> extends fulluntyped.untypedalg.shared.UntypedAlg<Term, Function<Context<Bind>, String>> {
-	UntypedAlgMatcher<Term, String> matcher();
+public interface PrintExt<Term, Bind> extends fulluntyped.extalg.shared.ExtAlg<Term, Function<Context<Bind>, String>> {
+	ExtAlgMatcher<Term, String> matcher();
 
 	default Function<Context<Bind>, String> TmString(String s) {
 		return ctx -> s;

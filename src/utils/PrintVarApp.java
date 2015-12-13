@@ -2,7 +2,7 @@ package utils;
 
 import java.util.function.Function;
 
-public interface PrintVarApp<Term, Bind> extends utils.varalg.shared.VarAlg<Term, Function<Context<Bind>, String>> {
+public interface PrintVarApp<Term, Bind> extends utils.varappalg.shared.VarAppAlg<Term, Function<Context<Bind>, String>> {
 	untyped.PrintBind<Bind> printBind();
 
 	@Override

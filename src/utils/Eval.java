@@ -2,7 +2,6 @@ package utils;
 
 public interface Eval<Term> {
 	Term eval1(Term t);
-	String print(Term t);
 	boolean isVal(Term t);
 
 	default Term eval(Term t) {

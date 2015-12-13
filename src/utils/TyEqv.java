@@ -3,27 +3,22 @@ package utils;
 import java.util.function.Function;
 
 import library.Zero;
-import utils.tyalg.external.TyAlgMatcher;
-import utils.tyalg.shared.TyAlgQuery;
+import utils.tyboolalg.external.TyBoolAlgMatcher;
+import utils.tyboolalg.shared.TyBoolAlgQuery;
 
-public interface TyEqv<Ty, Bind> {
-	TyEqual<Ty> tyEqual();
+public interface TyEqv<Ty> extends TyBoolAlgQuery<Ty, Function<Ty, Boolean>> {
+	TyBoolAlgMatcher<Ty, Boolean> matcher();
 
-	interface TyEqual<Ty> extends TyAlgQuery<Ty, Function<Ty, Boolean>> {
-		TyAlgMatcher<Ty, Boolean> matcher();
-
-		@Override
-		default Zero<Function<Ty, Boolean>> m() {
-			return () -> ty -> false;
-		}
-
-		@Override
-		default Function<Ty, Boolean> TyBool() {
-			return ty -> matcher().TyBool(() -> true).otherwise(() -> false).visitTy(ty);
-		}
+	@Override
+	default Zero<Function<Ty, Boolean>> m() {
+		return () -> ty -> false;
 	}
 
-	default boolean tyEqv(Context<Bind> ctx, Ty ty1, Ty ty2) {
-		return tyEqual().visitTy(ty1).apply(ty2);
+	@Override
+	default Function<Ty, Boolean> TyBool() {
+		return ty -> matcher()
+				.TyBool(() -> true)
+				.otherwise(() -> false)
+				.visitTy(ty);
 	}
 }

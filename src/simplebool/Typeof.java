@@ -14,6 +14,9 @@ public interface Typeof<Term, Ty, Bind>
 	@Override
 	TyAlgMatcher<Ty, Ty> tyMatcher();
 
+	@Override
+	TyEqv<Ty> tyEqv();
+
 	simplebool.bindingalg.shared.BindingAlg<Bind, Ty, Bind> bindAlg();
 
 	GetTypeFromBind<Bind, Ty> getTypeFromBind();
@@ -23,8 +26,10 @@ public interface Typeof<Term, Ty, Bind>
 		return ctx -> {
 			Ty ty1 = visitTerm(t1).apply(ctx);
 			Ty ty2 = visitTerm(t2).apply(ctx);
-			return tyMatcher().TyArr(ty11 -> ty12 -> tyEqv(ctx, ty2, ty11) ? ty12 : m().empty().apply(ctx))
-					.otherwise(() -> m().empty().apply(ctx)).visitTy(ty1);
+			return tyMatcher()
+					.TyArr(ty11 -> ty12 -> tyEqv().visitTy(ty2).apply(ty11) ? ty12 : m().empty().apply(ctx))
+					.otherwise(() -> m().empty().apply(ctx))
+					.visitTy(ty1);
 		};
 	}
 

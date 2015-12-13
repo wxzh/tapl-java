@@ -6,7 +6,7 @@ import fulluntyped.termalg.external.TermAlgMatcher;
 import utils.Context;
 
 public interface Print<Term, Bind> extends fulluntyped.termalg.shared.TermAlg<Term, Function<Context<Bind>, String>>,
-		untyped.Print<Term, Bind>, PrintUntyped<Term, Bind> {
+		untyped.Print<Term, Bind>, PrintExt<Term, Bind> {
 	@Override
 	PrintBind<Bind, Term> printBind();
 

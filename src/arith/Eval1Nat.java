@@ -11,6 +11,7 @@ public interface Eval1Nat<Term> extends NatAlgQuery<Term, Term> {
 	IsNumericVal<Term> isNumericVal();
 	NatAlg<Term, Term> alg();
 
+	@Override
 	default Zero<Term> m() {
 		throw new NoRuleApplies();
 	}

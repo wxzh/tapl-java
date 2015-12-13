@@ -16,10 +16,13 @@ public interface Typeof<Term, Ty, Bind>
 	TyAlgMatcher<Ty, Ty> tyMatcher();
 
 	@Override
+	TyEqv<Ty> tyEqv();
+
+	@Override
 	default Function<Context<Bind>, Ty> TmIsZero(Term t) {
 		return ctx -> {
 			Ty tyT = visitTerm(t).apply(ctx);
-			return tyEqv(ctx, tyT, tyAlg().TyNat()) ? tyAlg().TyBool() : m().empty().apply(ctx);
+			return tyEqv().visitTy(tyT).apply(tyAlg().TyNat()) ? tyAlg().TyBool() : m().empty().apply(ctx);
 		};
 	}
 
@@ -33,7 +36,7 @@ public interface Typeof<Term, Ty, Bind>
 		return ctx -> {
 			Ty tyNat = tyAlg().TyNat();
 			Ty tyT = visitTerm(t).apply(ctx);
-			return tyEqv(ctx, tyT, tyNat) ? tyNat : m().empty().apply(ctx);
+			return tyEqv().visitTy(tyT).apply(tyNat) ? tyNat : m().empty().apply(ctx);
 		};
 	}
 

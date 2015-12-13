@@ -3,6 +3,6 @@ package utils;
 import annotation.Free;
 
 @Free
-public interface TyAlg<Ty> {
+public interface TyBoolAlg<Ty> {
 	Ty TyBool();
 }

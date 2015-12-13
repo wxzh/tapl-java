@@ -6,5 +6,5 @@ import utils.VarAppAlg;
 
 @Free
 public interface TermAlg<Term, Ty> extends VarAppAlg<Term>, BoolAlg<Term> {
-	Term TmAbs(String x, Ty t, Term e);
+	Term TmAbs(String x, Ty ty, Term t);
 }

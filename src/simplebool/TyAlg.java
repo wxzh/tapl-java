@@ -3,7 +3,7 @@ package simplebool;
 import annotation.Free;
 
 @Free
-public interface TyAlg<Ty> extends utils.TyAlg<Ty> {
-	Ty TyArr(Ty t1, Ty t2);
+public interface TyAlg<Ty> extends utils.TyBoolAlg<Ty> {
+	Ty TyArr(Ty ty1, Ty ty2);
 }
 

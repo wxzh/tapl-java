@@ -8,7 +8,7 @@ import utils.PrintVarApp;
 
 public interface Print<Term, Ty, Bind> extends simplebool.termalg.shared.TermAlg<Term, Ty, Function<Context<Bind>, String>>, PrintVarApp<Term, Bind> {
 	PrintTy<Ty, Bind> printTy();
-	PrintBind<Bind, Term, Ty> printBind();
+	PrintBind<Bind, Ty> printBind();
 
 	@Override
 	default Function<Context<Bind>, String> TmAbs(String x, Ty ty, Term t) {

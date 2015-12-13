@@ -6,13 +6,18 @@ import fulluntyped.termalg.shared.TermAlgQuery;
 import library.Zero;
 import utils.Context;
 
-public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, untyped.Eval1<Term>, arith.Eval1<Term>, Eval1Untyped<Term, Bind> {
+public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, untyped.Eval1<Term>, Eval1Ext<Term, Bind> {
+	@Override
 	IsVal<Term> isVal();
+	@Override
 	TermAlgMatcher<Term, Term> matcher();
 	BindingAlgMatcher<Bind, Term, Term> bindMatcher();
+	@Override
 	fulluntyped.termalg.shared.TermAlg<Term, Term> alg();
+	@Override
+	TermShiftAndSubst<Term> termShiftAndSubst();
+
 	Context<Bind> ctx();
-	TmMap<Term> tmMap();
 
 	@Override
 	default Zero<Term> m() {
@@ -21,7 +26,7 @@ public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, untyped.Eva
 
 	@Override
 	default Term TmLet(String x, Term t1, Term t2) {
-		return isVal().visitTerm(t1) ? termSubstTop(t1, t2) : alg().TmLet(x, visitTerm(t1), t2);
+		return isVal().visitTerm(t1) ? termShiftAndSubst().termSubstTop(t1, t2) : alg().TmLet(x, visitTerm(t1), t2);
 	}
 
 	default Term TmVar(int x, int n) {
