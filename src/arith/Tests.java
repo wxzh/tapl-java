@@ -51,11 +51,6 @@ public class Tests {
 		}
 
 		@Override
-		public String print(ITerm e) {
-			return e.accept(print);
-		}
-
-		@Override
 		public boolean isVal(ITerm e) {
 			return e.accept(isVal);
 		}
