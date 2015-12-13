@@ -5,19 +5,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import fullsimple.termalg.external.TermAlgMatcher;
-import fulluntyped.PrintUntyped;
+import fulluntyped.PrintExt;
 import library.Tuple2;
 import library.Tuple3;
 import utils.Context;
 
 public interface Print<Term, Ty, Bind>
-		extends fullsimple.termalg.shared.TermAlg<Term, Ty, Function<Context<Bind>, String>>, simplebool.Print<Term, Ty, Bind>, PrintUntyped<Term, Bind> {
+		extends fullsimple.termalg.shared.TermAlg<Term, Ty, Function<Context<Bind>, String>>, simplebool.Print<Term, Ty, Bind>, PrintExt<Term, Bind> {
 	@Override
 	TermAlgMatcher<Term, Ty, String> matcher();
 	@Override
 	PrintTy<Ty, Bind> printTy();
-	@Override
-	PrintBind<Bind, Term, Ty> printBind();
 
 	@Override
 	default Function<Context<Bind>, String> TmInert(Ty ty) {

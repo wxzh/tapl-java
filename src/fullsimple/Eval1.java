@@ -4,17 +4,20 @@ import java.util.List;
 
 import fullsimple.termalg.external.TermAlgMatcher;
 import fullsimple.termalg.shared.TermAlgQuery;
-import fulluntyped.Eval1Untyped;
+import fulluntyped.Eval1Ext;
 import library.Tuple3;
 import utils.Context;
 
-// TODO: is ctx changed while evaluation?
-public interface Eval1<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Term>, Eval1Untyped<Term, Bind>, TermShiftAndSubst<Term, Ty> {
-	IsVal<Term, Ty> isVal();
-	fullsimple.termalg.shared.TermAlg<Term, Ty, Term> alg();
-	TermAlgMatcher<Term, Ty, Term> matcher();
+public interface Eval1<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Term>, simplebool.Eval1<Term, Ty>, Eval1Ext<Term, Bind> {
 	Context<Bind> ctx();
-
+	@Override
+	IsVal<Term, Ty> isVal();
+	@Override
+	fullsimple.termalg.shared.TermAlg<Term, Ty, Term> alg();
+	@Override
+	TermAlgMatcher<Term, Ty, Term> matcher();
+	@Override
+	TermShiftAndSubst<Term, Ty> termShiftAndSubst();
 	@Override
 	default Term TmTag(String label, Term t, Ty ty) {
 		return alg().TmTag(label, visitTerm(t), ty);
@@ -27,7 +30,7 @@ public interface Eval1<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Term>, Eva
 	default Term TmCase(Term t, List<Tuple3<String, String, Term>> branches) {
 		return matcher()
 				.TmTag(label -> ty -> t1 -> isVal().visitTerm(t) ? branches.stream().filter(b -> b._1.equals(label))
-						.findFirst().map(b -> termSubstTop(t, b._3)).orElseGet(() -> m().empty())
+						.findFirst().map(b -> termShiftAndSubst().termSubstTop(t, b._3)).orElseGet(() -> m().empty())
 						: alg().TmCase(visitTerm(t), branches))
 				.otherwise(() -> alg().TmCase(visitTerm(t), branches))
 				.visitTerm(t);
@@ -38,5 +41,3 @@ public interface Eval1<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Term>, Eva
 		return alg().TmFix(visitTerm(t));
 	}
 }
-
-// TODO: bindingShift.visitBind(ctx.getBinding(i)).(i + 1)

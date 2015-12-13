@@ -1,14 +1,9 @@
 package fullsimple;
 
 import fullsimple.termalg.shared.TermAlgQuery;
-import fulluntyped.IsValUntyped;
+import fulluntyped.IsValExt;
 
-public interface IsVal<Term, Ty> extends TermAlgQuery<Term, Ty, Boolean>, IsValUntyped<Term>, simplebool.IsVal<Term, Ty> {
-	@Override
-	default Boolean TmApp(Term p1, Term p2) {
-		return false;
-	}
-
+public interface IsVal<Term, Ty> extends TermAlgQuery<Term, Ty, Boolean>, IsValExt<Term>, simplebool.IsVal<Term, Ty> {
 	@Override
 	default Boolean TmTag(String x, Term t, Ty ty) {
 		return visitTerm(t);

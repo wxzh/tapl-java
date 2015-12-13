@@ -6,7 +6,7 @@ import java.util.function.Function;
 import fullsimple.bindingalg.shared.BindingAlgQuery;
 import utils.Context;
 
-public interface PrintBind<Bind, Term, Ty> extends BindingAlgQuery<Bind, Term, Ty, Function<Context<Bind>, String>>, simplebool.PrintBind<Bind, Term, Ty> {
+public interface PrintBind<Bind, Term, Ty> extends BindingAlgQuery<Bind, Term, Ty, Function<Context<Bind>, String>>, simplebool.PrintBind<Bind, Ty> {
 	Print<Term, Ty, Bind> printTerm();
 
 	@Override
