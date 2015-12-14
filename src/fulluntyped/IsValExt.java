@@ -1,11 +1,9 @@
 package fulluntyped;
 
-import java.util.List;
-
 import fulluntyped.extalg.shared.ExtAlgQuery;
-import library.Tuple2;
+import library.Zero;
 
-public interface IsValExt<Term> extends ExtAlgQuery<Term, Boolean>, untyped.IsVal<Term> {
+public interface IsValExt<Term> extends ExtAlgQuery<Term, Boolean>, untyped.IsVal<Term>, record.IsVal<Term> {
 	default Boolean TmFloat(float p1) {
 		return true;
 	}
@@ -14,7 +12,8 @@ public interface IsValExt<Term> extends ExtAlgQuery<Term, Boolean>, untyped.IsVa
 		return true;
 	}
 
-	default Boolean TmRecord(List<Tuple2<String, Term>> fields) {
-		return fields.stream().map(pr -> visitTerm(pr._2)).reduce(true, (x, y) -> x && y);
+	@Override
+	default Zero<Boolean> m() {
+		return untyped.IsVal.super.m();
 	}
 }
