@@ -1,10 +1,9 @@
-package untyped;
+package utils;
 
 import java.util.function.Function;
 
 import library.Zero;
-import untyped.bindingalg.shared.BindingAlgQuery;
-import utils.Context;
+import utils.bindingalg.shared.BindingAlgQuery;
 
 public interface PrintBind<Bind> extends BindingAlgQuery<Bind, Function<Context<Bind>, String>> {
 	@Override

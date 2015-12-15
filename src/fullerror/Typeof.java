@@ -4,27 +4,17 @@ import java.util.function.Function;
 
 import fullerror.termalg.shared.TermAlgQuery;
 import fullerror.tyalg.external.TyAlgMatcher;
+import fullerror.tyalg.shared.GTyAlg;
 import utils.Context;
 
-public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>> {
-	TyAlgMatcher<Ty, Ty> tyMatcher();
-	Subtype<Ty, Bind> subtype();
-	Join<Ty, Bind> join();
-	fullerror.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
-
+public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>, simplebool.Typeof<Term, Ty, Bind>, bot.Typeof<Term, Ty, Bind> {
 	@Override
-	default Function<Context<Bind>, Ty> TmApp(Term t1, Term t2) {
-		return ctx -> {
-			Ty ty1 = visitTerm(t1).apply(ctx);
-			Ty ty2 = visitTerm(t2).apply(ctx);
-
-			return tyMatcher()
-					.TyArr(ty11 -> ty12 -> subtype().subtype(ty2, ty11) ? ty12 : m().empty().apply(ctx))
-					.TyBot(() -> tyAlg().TyBot())
-					.otherwise(() -> m().empty().apply(ctx))
-					.visitTy(ty1);
-		};
-	}
+	Subtype<Ty> subtype();
+	Join<Ty, Bind> join();
+	@Override
+	TyAlgMatcher<Ty, Ty> tyMatcher();
+	@Override
+	GTyAlg<Ty, Ty> tyAlg();
 
 	@Override
 	default Function<Context<Bind>, Ty> TmIf(Term t1, Term t2, Term t3) {

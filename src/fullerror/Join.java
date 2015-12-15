@@ -1,21 +1,26 @@
 package fullerror;
 
-import java.util.function.Function;
-
-import fullref.tyalg.external.TyAlgMatcher;
-import fullref.tyalg.shared.TyAlgQuery;
+import fullerror.tyalg.external.TyAlgMatcher;
+import fullerror.tyalg.shared.GTyAlg;
+import fullerror.tyalg.shared.TyAlgQuery;
 import library.Zero;
 
-public interface Join<Ty, Bind> extends TyAlgQuery<Ty, Function<Ty, Ty>> {
+interface IJoin<Ty> {
+	Ty join(Ty ty);
+}
+
+interface IMeet<Ty> {
+	Ty meet(Ty ty);
+}
+
+// page: 218
+public interface Join<Ty, Bind> extends TyAlgQuery<Ty, IJoin<Ty>> {
 	TyAlgMatcher<Ty, Ty> matcher();
-
-	Subtype<Ty, Bind> subtype();
-
-	fullerror.tyalg.shared.TyAlg<Ty, Ty> alg();
-
+	Subtype<Ty> subtype();
+	GTyAlg<Ty, Ty> alg();
 	Meet<Ty, Bind> meet();
 
-	default Zero<Function<Ty, Ty>> m() {
+	default Zero<IJoin<Ty>> m() {
 		return () -> ty -> alg().TyTop();
 	}
 
@@ -24,29 +29,24 @@ public interface Join<Ty, Bind> extends TyAlgQuery<Ty, Function<Ty, Ty>> {
 			return ty2;
 		if (subtype().subtype(ty2, ty1))
 			return ty1;
-		return visitTy(ty1).apply(ty2);
+		return visitTy(ty1).join(ty2);
 	}
 
-
 	@Override
-	default Function<Ty, Ty> TyArr(Ty tyS1, Ty tyS2) {
+	default IJoin<Ty> TyArr(Ty tyS1, Ty tyS2) {
 		return ty -> matcher()
 				.TyArr(tyT1 -> tyT2 -> alg().TyArr(meet().meet(tyS1, tyT1), join(tyS2, tyT2)))
-				.otherwise(() -> m().empty().apply(ty))
+				.otherwise(() -> m().empty().join(ty))
 				.visitTy(ty);
 	}
 
-	interface Meet<Ty, Bind> extends TyAlgQuery<Ty, Function<Ty, Ty>> {
-
+	interface Meet<Ty, Bind> extends TyAlgQuery<Ty, IMeet<Ty>> {
 		TyAlgMatcher<Ty, Ty> matcher();
-
-		Subtype<Ty, Bind> subtype();
-
-		fullerror.tyalg.shared.TyAlg<Ty, Ty> alg();
-
+		Subtype<Ty> subtype();
+		GTyAlg<Ty, Ty> alg();
 		Join<Ty, Bind> join();
 
-		default Zero<Function<Ty, Ty>> m() {
+		default Zero<IMeet<Ty>> m() {
 			return () -> ty -> alg().TyBot();
 		}
 
@@ -55,14 +55,14 @@ public interface Join<Ty, Bind> extends TyAlgQuery<Ty, Function<Ty, Ty>> {
 				return ty1;
 			if (subtype().subtype(ty2, ty1))
 				return ty2;
-			return visitTy(ty1).apply(ty2);
+			return visitTy(ty1).meet(ty2);
 		}
 
 		@Override
-		default Function<Ty, Ty> TyArr(Ty tyS1, Ty tyS2) {
+		default IMeet<Ty> TyArr(Ty tyS1, Ty tyS2) {
 			return ty -> matcher()
 					.TyArr(tyT1 -> tyT2 -> alg().TyArr(join().join(tyS1, tyT1), meet(tyS2, tyT2)))
-					.otherwise(() -> m().empty().apply(ty))
+					.otherwise(() -> m().empty().meet(ty))
 					.visitTy(ty);
 		}
 	}

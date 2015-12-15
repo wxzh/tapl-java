@@ -3,10 +3,10 @@ package fullsimple;
 import java.util.Optional;
 import java.util.function.Function;
 
-import fullsimple.bindingalg.shared.BindingAlgQuery;
+import fullsimple.bindingalg.shared.GBindingAlg;
 import utils.Context;
 
-public interface PrintBind<Bind, Term, Ty> extends BindingAlgQuery<Bind, Term, Ty, Function<Context<Bind>, String>>, simplebool.PrintBind<Bind, Ty> {
+public interface PrintBind<Bind, Term, Ty> extends GBindingAlg<Bind, Term, Ty, Function<Context<Bind>, String>>, typed.PrintBind<Bind, Ty> {
 	Print<Term, Ty, Bind> printTerm();
 
 	@Override

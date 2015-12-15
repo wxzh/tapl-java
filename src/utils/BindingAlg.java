@@ -1,4 +1,4 @@
-package untyped;
+package utils;
 
 import annotation.Free;
 

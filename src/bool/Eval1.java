@@ -1,13 +1,14 @@
-package arith;
+package bool;
 
-import arith.boolalg.external.BoolAlgMatcher;
-import arith.boolalg.shared.BoolAlgQuery;
+import bool.termalg.external.TermAlgMatcher;
+import bool.termalg.shared.GTermAlg;
+import bool.termalg.shared.TermAlgQuery;
 import library.Zero;
 import utils.NoRuleApplies;
 
-public interface Eval1Bool<Term> extends BoolAlgQuery<Term, Term> {
-	arith.boolalg.shared.BoolAlg<Term, Term> alg();
-	BoolAlgMatcher<Term, Term> matcher();
+public interface Eval1<Term> extends TermAlgQuery<Term, Term> {
+	GTermAlg<Term, Term> alg();
+	TermAlgMatcher<Term, Term> matcher();
 
 	@Override
 	default Zero<Term> m() {

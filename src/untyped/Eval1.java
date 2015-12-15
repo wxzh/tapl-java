@@ -2,12 +2,16 @@ package untyped;
 
 import library.Zero;
 import untyped.termalg.external.TermAlgMatcher;
+import untyped.termalg.shared.GTermAlg;
 import untyped.termalg.shared.TermAlgQuery;
 import utils.NoRuleApplies;
 
-public interface Eval1<Term> extends TermAlgQuery<Term, Term>  {
-	untyped.termalg.shared.TermAlg<Term, Term> alg();
+public interface Eval1<Term> extends TermAlgQuery<Term, Term>, varapp.Eval1<Term> {
+	@Override
+	GTermAlg<Term, Term> alg();
+	@Override
 	TermShiftAndSubst<Term> termShiftAndSubst();
+	@Override
 	IsVal<Term> isVal();
 	TermAlgMatcher<Term, Term> matcher();
 

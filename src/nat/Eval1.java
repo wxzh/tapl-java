@@ -1,15 +1,15 @@
-package arith;
+package nat;
 
-import arith.natalg.external.NatAlgMatcher;
-import arith.natalg.shared.NatAlg;
-import arith.natalg.shared.NatAlgQuery;
 import library.Zero;
+import nat.termalg.external.TermAlgMatcher;
+import nat.termalg.shared.GTermAlg;
+import nat.termalg.shared.TermAlgQuery;
 import utils.NoRuleApplies;
 
-public interface Eval1Nat<Term> extends NatAlgQuery<Term, Term> {
-	NatAlgMatcher<Term, Term> matcher();
+public interface Eval1<Term> extends TermAlgQuery<Term, Term> {
+	TermAlgMatcher<Term, Term> matcher();
 	IsNumericVal<Term> isNumericVal();
-	NatAlg<Term, Term> alg();
+	GTermAlg<Term, Term> alg();
 
 	@Override
 	default Zero<Term> m() {

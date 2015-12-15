@@ -7,22 +7,23 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import library.Tuple2;
+import utils.bindingalg.shared.GBindingAlg;
 
 // should be pure
 public class Context<Bind> {
 	protected List<Tuple2<String, Bind>> binds;
-	protected untyped.bindingalg.shared.BindingAlg<Bind, Bind> alg;
+	protected GBindingAlg<Bind, Bind> alg;
 
 	public int length() {
 		return binds.size();
 	}
 
-	public Context(untyped.bindingalg.shared.BindingAlg<Bind, Bind> alg) {
+	public Context(GBindingAlg<Bind, Bind> alg) {
 		this.alg = alg;
 		this.binds = new ArrayList<>();
 	}
 
-	private Context(untyped.bindingalg.shared.BindingAlg<Bind, Bind> alg, List<Tuple2<String, Bind>> binds) {
+	private Context(GBindingAlg<Bind, Bind> alg, List<Tuple2<String, Bind>> binds) {
 		this(alg);
 		this.binds = binds;
 	}

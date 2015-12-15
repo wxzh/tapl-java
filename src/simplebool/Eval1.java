@@ -1,22 +1,22 @@
 package simplebool;
 
-import arith.Eval1Bool;
+import library.Zero;
 import simplebool.termalg.external.TermAlgMatcher;
+import simplebool.termalg.shared.GTermAlg;
 import simplebool.termalg.shared.TermAlgQuery;
 
-public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, Eval1Bool<Term> {
+public interface Eval1<Term, Ty> extends TermAlgQuery<Term, Ty, Term>, bool.Eval1<Term>, typed.Eval1<Term, Ty> {
+	@Override
 	TermShiftAndSubst<Term, Ty> termShiftAndSubst();
+	@Override
 	IsVal<Term, Ty> isVal();
 	@Override
-	simplebool.termalg.shared.TermAlg<Term, Ty, Term> alg();
+	GTermAlg<Term, Ty, Term> alg();
 	@Override
 	TermAlgMatcher<Term, Ty, Term> matcher();
 
-
-	default Term TmApp(Term t1, Term t2) {
-		return matcher()
-				.TmAbs(x -> ty -> t -> isVal().visitTerm(t2) ? termShiftAndSubst().termSubstTop(t2, t)
-						: (isVal().visitTerm(t1) ? alg().TmApp(t1, visitTerm(t2)) : alg().TmApp(visitTerm(t1), t2)))
-				.otherwise(() -> alg().TmApp(visitTerm(t1), t2)).visitTerm(t1);
+	@Override
+	default Zero<Term> m() {
+		return bool.Eval1.super.m();
 	}
 }

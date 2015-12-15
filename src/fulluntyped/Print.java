@@ -3,9 +3,10 @@ package fulluntyped;
 import java.util.function.Function;
 
 import fulluntyped.termalg.external.TermAlgMatcher;
+import fulluntyped.termalg.shared.GTermAlg;
 import utils.Context;
 
-public interface Print<Term, Bind> extends fulluntyped.termalg.shared.TermAlg<Term, Function<Context<Bind>, String>>,
+public interface Print<Term, Bind> extends GTermAlg<Term, Function<Context<Bind>, String>>,
 		untyped.Print<Term, Bind>, PrintExt<Term, Bind> {
 	@Override
 	PrintBind<Bind, Term> printBind();

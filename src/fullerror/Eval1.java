@@ -1,6 +1,7 @@
 package fullerror;
 
 import fullerror.termalg.external.TermAlgMatcher;
+import fullerror.termalg.shared.GTermAlg;
 
 public interface Eval1<Term, Ty> extends simplebool.Eval1<Term, Ty> {
 	@Override
@@ -8,7 +9,7 @@ public interface Eval1<Term, Ty> extends simplebool.Eval1<Term, Ty> {
 	@Override
 	IsVal<Term, Ty> isVal();
 	@Override
-	fullerror.termalg.shared.TermAlg<Term, Ty, Term> alg();
+	GTermAlg<Term, Ty, Term> alg();
 	@Override
 	TermShiftAndSubst<Term, Ty> termShiftAndSubst();
 

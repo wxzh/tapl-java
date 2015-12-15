@@ -1,7 +1,7 @@
-package simplebool;
+package typed;
 
 import library.Zero;
-import simplebool.bindingalg.shared.BindingAlgQuery;
+import typed.bindingalg.shared.BindingAlgQuery;
 
 public interface GetTypeFromBind<Bind, Ty> extends BindingAlgQuery<Bind, Ty, Ty> {
 	@Override

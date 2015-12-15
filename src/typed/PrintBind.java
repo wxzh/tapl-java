@@ -1,11 +1,11 @@
-package simplebool;
+package typed;
 
 import java.util.function.Function;
 
-import simplebool.bindingalg.shared.BindingAlgQuery;
+import typed.bindingalg.shared.BindingAlgQuery;
 import utils.Context;
 
-public interface PrintBind<Bind, Ty> extends BindingAlgQuery<Bind, Ty, Function<Context<Bind>, String>>, untyped.PrintBind<Bind> {
+public interface PrintBind<Bind, Ty> extends BindingAlgQuery<Bind, Ty, Function<Context<Bind>, String>>, utils.PrintBind<Bind> {
 	PrintTy<Ty, Bind> printTy();
 
 	@Override

@@ -4,54 +4,60 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.function.Function;
+
 import org.junit.Test;
 
-import arith.termalg.external.ITerm;
+import arith.termalg.external.Term;
 import arith.termalg.external.TermAlgFactory;
 import arith.termalg.external.TermAlgMatcher;
 import arith.termalg.external.TermAlgMatcherImpl;
 import arith.termalg.external.TermVisitor;
+import arith.termalg.shared.GTermAlg;
+import utils.Context;
 import utils.Eval;
 import utils.NoRuleApplies;
+import utils.bindingalg.external.Bind;
+import utils.bindingalg.external.BindingAlgFactory;
 
 public class Tests {
 
-	class IsNumericalValImpl implements IsNumericVal<ITerm>, TermVisitor<Boolean> {
+	class IsNumericalValImpl implements IsNumericVal<Term>, TermVisitor<Boolean> {
 	}
 
-	class IsValImpl implements IsVal<ITerm>, TermVisitor<Boolean> {
+	class IsValImpl implements IsVal<Term>, TermVisitor<Boolean> {
 	}
 
-	class PrintImpl implements Print<ITerm>, TermVisitor<String> {
-		public TermAlgMatcher<ITerm, String> matcher() {
+	class PrintImpl implements Print<Term, Bind>, TermVisitor<Function<Context<Bind>, String>> {
+		public TermAlgMatcher<Term, String> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
 	}
 
-	class Eval1Impl implements Eval1<ITerm>, TermVisitor<ITerm> {
-		public arith.termalg.shared.TermAlg<ITerm, ITerm> alg() {
+	class Eval1Impl implements Eval1<Term>, TermVisitor<Term> {
+		public GTermAlg<Term, Term> alg() {
 			return alg;
 		}
 
 		@Override
-		public TermAlgMatcher<ITerm, ITerm> matcher() {
+		public TermAlgMatcher<Term, Term> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
 
 		@Override
-		public IsNumericVal<ITerm> isNumericVal() {
+		public IsNumericVal<Term> isNumericVal() {
 			return isNumericalVal;
 		}
 	}
 
-	class EvalImpl implements Eval<ITerm> {
+	class EvalImpl implements Eval<Term> {
 		@Override
-		public ITerm eval1(ITerm e) {
+		public Term eval1(Term e) {
 			return e.accept(eval1);
 		}
 
 		@Override
-		public boolean isVal(ITerm e) {
+		public boolean isVal(Term e) {
 			return e.accept(isVal);
 		}
 	}
@@ -62,21 +68,27 @@ public class Tests {
 	private IsValImpl isVal = new IsValImpl();
 	private Eval1Impl eval1 = new Eval1Impl();
 	private EvalImpl eval = new EvalImpl();
+	private BindingAlgFactory bindFact = new BindingAlgFactory();
+	private Context<Bind> ctx = new Context<Bind>(bindFact);
 
-	private ITerm t = alg.TmTrue();
-	private ITerm f = alg.TmFalse();
-	private ITerm if_f_then_t_else_f = alg.TmIf(f, t, f);
-	private ITerm zero = alg.TmZero();
-	private ITerm pred_zero = alg.TmPred(zero);
-	private ITerm succ_pred_0 = alg.TmSucc(alg.TmPred(zero));
-	private ITerm pred_succ_0 = alg.TmPred(alg.TmSucc(zero));
-	private ITerm succ_succ_0 = alg.TmSucc(alg.TmSucc(zero));
-	private ITerm iszero_pred_succ_succ_0 = alg.TmIsZero(alg.TmPred(alg.TmSucc(alg.TmSucc(zero))));
+	private Term t = alg.TmTrue();
+	private Term f = alg.TmFalse();
+	private Term if_f_then_t_else_f = alg.TmIf(f, t, f);
+	private Term zero = alg.TmZero();
+	private Term pred_zero = alg.TmPred(zero);
+	private Term succ_pred_0 = alg.TmSucc(alg.TmPred(zero));
+	private Term pred_succ_0 = alg.TmPred(alg.TmSucc(zero));
+	private Term succ_succ_0 = alg.TmSucc(alg.TmSucc(zero));
+	private Term iszero_pred_succ_succ_0 = alg.TmIsZero(alg.TmPred(alg.TmSucc(alg.TmSucc(zero))));
+
+	String print(Term t) {
+		return t.accept(print).apply(ctx);
+	}
 
 	@Test
 	public void printTest() {
-		assertEquals("if false then true else false", if_f_then_t_else_f.accept(print));
-		assertEquals("(iszero (pred 2))", iszero_pred_succ_succ_0.accept(print));
+		assertEquals("if false then true else false", print(if_f_then_t_else_f));
+		assertEquals("(iszero (pred 2))", print(iszero_pred_succ_succ_0));
 	}
 
 	@Test
@@ -99,15 +111,15 @@ public class Tests {
 	}
 
 	public void eval1Test(){
-		assertEquals("false", if_f_then_t_else_f.accept(eval1).accept(print));
+		assertEquals("false", print(if_f_then_t_else_f.accept(eval1)));
 	}
 
 	@Test
 	public void evalTest() {
-		assertEquals("true", eval.eval(t).accept(print));
-		assertEquals("false", eval.eval(if_f_then_t_else_f).accept(print));
-		assertEquals("1", eval.eval(succ_pred_0).accept(print));
-		assertEquals("0", eval.eval(pred_succ_0).accept(print));
-		assertEquals("false", eval.eval(iszero_pred_succ_succ_0).accept(print));
+		assertEquals("true", print(eval.eval(t)));
+		assertEquals("false", print(eval.eval(if_f_then_t_else_f)));
+		assertEquals("1", print(eval.eval(succ_pred_0)));
+		assertEquals("0", print(eval.eval(pred_succ_0)));
+		assertEquals("false", print(eval.eval(iszero_pred_succ_succ_0)));
 	}
 }

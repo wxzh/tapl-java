@@ -5,13 +5,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import fullsimple.termalg.external.TermAlgMatcher;
+import fullsimple.termalg.shared.GTermAlg;
 import fulluntyped.PrintExt;
 import library.Tuple2;
 import library.Tuple3;
 import utils.Context;
 
 public interface Print<Term, Ty, Bind>
-		extends fullsimple.termalg.shared.TermAlg<Term, Ty, Function<Context<Bind>, String>>, simplebool.Print<Term, Ty, Bind>, PrintExt<Term, Bind> {
+		extends GTermAlg<Term, Ty, Function<Context<Bind>, String>>, simplebool.Print<Term, Ty, Bind>, PrintExt<Term, Bind> {
 	@Override
 	TermAlgMatcher<Term, Ty, String> matcher();
 	@Override

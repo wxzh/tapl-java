@@ -1,8 +1,8 @@
-package utils;
+package bool;
 
 import annotation.Free;
 
 @Free
-public interface TyBoolAlg<Ty> {
+public interface TyAlg<Ty> {
 	Ty TyBool();
 }

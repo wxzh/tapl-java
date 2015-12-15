@@ -4,23 +4,26 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import fullsimple.bindingalg.shared.GBindingAlg;
 import fullsimple.termalg.shared.TermAlgQuery;
 import fullsimple.tyalg.external.TyAlgMatcher;
-import library.Tuple2;
+import fullsimple.tyalg.shared.GTyAlg;
 import library.Tuple3;
+import library.Zero;
 import utils.Context;
 
 public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>,
-		tyarith.Typeof<Term, Ty, Bind>, simplebool.Typeof<Term, Ty, Bind> {
+		nat.Typeof<Term, Ty, Bind>, simplebool.Typeof<Term, Ty, Bind>, record.Typeof<Term, Ty, Bind> {
 	@Override
 	TyEqv<Ty> tyEqv();
 	@Override
 	TyAlgMatcher<Ty, Ty> tyMatcher();
 	@Override
-	fullsimple.bindingalg.shared.BindingAlg<Bind, Term, Ty, Bind> bindAlg();
-
+	GBindingAlg<Bind, Term, Ty, Bind> bindAlg();
 	@Override
-	fullsimple.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
+	GTyAlg<Ty, Ty> tyAlg();
+	@Override
+	GetTypeFromBind<Bind, Term, Ty> getTypeFromBind();
 
 	@Override
 	default Function<Context<Bind>, Ty> TmLet(String x, Term t1, Term t2) {
@@ -36,21 +39,10 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 			Ty tyT1 = visitTerm(t1).apply(ctx);
 			Ty tyT2 = visitTerm(t2).apply(ctx);
 			Ty tyFloat = tyAlg().TyFloat();
-			return tyEqv().visitTy(tyT1).apply(tyFloat) &&
-					tyEqv().visitTy(tyT2).apply(tyFloat)
+			return tyEqv().visitTy(tyT1).tyEqv(tyFloat) &&
+					tyEqv().visitTy(tyT2).tyEqv(tyFloat)
 					? tyFloat
 					: m().empty().apply(ctx);
-		};
-	}
-
-	@Override
-	default Function<Context<Bind>, Ty> TmProj(Term t, String l) {
-		return ctx -> {
-			Ty tyT = visitTerm(t).apply(ctx);
-			return tyMatcher()
-					.TyRecord(fieldTys -> fieldTys.stream().filter(pr -> pr._1.equals(l)).findFirst().map(pr -> pr._2)
-							.orElseGet(() -> m().empty().apply(ctx)))
-					.otherwise(() -> m().empty().apply(ctx)).visitTy(tyT);
 		};
 	}
 
@@ -65,12 +57,6 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmRecord(List<Tuple2<String, Term>> fields) {
-		return ctx -> tyAlg().TyRecord(fields.stream().map(pr -> new Tuple2<>(pr._1, visitTerm(pr._2).apply(ctx)))
-				.collect(Collectors.toList()));
-	}
-
-	@Override
 	default Function<Context<Bind>, Ty> TmUnit() {
 		return ctx -> tyAlg().TyUnit();
 	}
@@ -79,9 +65,9 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	default Function<Context<Bind>, Ty> TmTag(String l, Term t, Ty ty) {
 		return ctx -> tyMatcher()
 				.TyVariant(fieldTys -> fieldTys.stream().filter(pr -> pr._1.equals(l)).findFirst().map(pr -> {
-					Ty tyTExpected = pr._2; // already simplified
+					Ty tyTExpected = pr._2;
 					Ty tyT = visitTerm(t).apply(ctx);
-					return tyEqv().visitTy(tyT).apply(tyTExpected) ? ty : m().empty().apply(ctx);
+					return tyEqv().visitTy(tyT).tyEqv(tyTExpected) ? ty : m().empty().apply(ctx);
 				}).orElseGet(() -> m().empty().apply(ctx))).otherwise(() -> m().empty().apply(ctx))
 				.visitTy(ty);
 	}
@@ -107,7 +93,7 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 					}).collect(Collectors.toList());
 					// all case terms of the same type
 					Ty tyT1 = caseTypes.get(0);
-					if (caseTypes.stream().allMatch(ty -> tyEqv().visitTy(ty).apply(tyT1)))
+					if (caseTypes.stream().allMatch(ty -> tyEqv().visitTy(ty).tyEqv(tyT1)))
 						return tyT1;
 				}
 				return m().empty().apply(ctx);
@@ -120,7 +106,7 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 		return ctx -> {
 			Ty tyT = visitTerm(t).apply(ctx);
 			return tyMatcher()
-					.TyArr(ty1 -> ty2 -> tyEqv().visitTy(ty1).apply(ty2) ? ty2 : m().empty().apply(ctx))
+					.TyArr(ty1 -> ty2 -> tyEqv().visitTy(ty1).tyEqv(ty2) ? ty2 : m().empty().apply(ctx))
 					.otherwise(() -> m().empty().apply(ctx))
 					.visitTy(tyT);
 		};
@@ -130,7 +116,12 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	default Function<Context<Bind>, Ty> TmAscribe(Term t, Ty ty) {
 		return ctx -> {
 			Ty tyT = visitTerm(t).apply(ctx);
-			return tyEqv().visitTy(tyT).apply(ty) ? ty : m().empty().apply(ctx);
+			return tyEqv().visitTy(tyT).tyEqv(ty) ? ty : m().empty().apply(ctx);
 		};
+	}
+
+	@Override
+	default Zero<Function<Context<Bind>, Ty>> m() {
+		return simplebool.Typeof.super.m();
 	}
 }

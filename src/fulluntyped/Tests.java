@@ -10,119 +10,119 @@ import java.util.function.Function;
 
 import org.junit.Test;
 
+import fulluntyped.bindingalg.external.Bind;
 import fulluntyped.bindingalg.external.BindVisitor;
 import fulluntyped.bindingalg.external.BindingAlgFactory;
 import fulluntyped.bindingalg.external.BindingAlgMatcher;
 import fulluntyped.bindingalg.external.BindingAlgMatcherImpl;
-import fulluntyped.bindingalg.external.IBind;
-import fulluntyped.termalg.external.ITerm;
+import fulluntyped.termalg.external.Term;
 import fulluntyped.termalg.external.TermAlgFactory;
 import fulluntyped.termalg.external.TermAlgMatcher;
 import fulluntyped.termalg.external.TermAlgMatcherImpl;
 import fulluntyped.termalg.external.TermVisitor;
-import fulluntyped.termalg.shared.TermAlg;
+import fulluntyped.termalg.shared.GTermAlg;
 import library.Tuple2;
 import utils.Context;
 import utils.Eval;
-import utils.varappalg.shared.VarAppAlg;
+import varapp.TmMapCtx;
 
 public class Tests {
 	// compiler bug? should not have conflicts
-	class PrintImpl implements Print<ITerm, IBind<ITerm>>, TermVisitor<Function<Context<IBind<ITerm>>, String>> {
-		public TermAlgMatcher<ITerm, String> matcher() {
+	class PrintImpl implements Print<Term, Bind<Term>>, TermVisitor<Function<Context<Bind<Term>>, String>> {
+		public TermAlgMatcher<Term, String> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
 
 		@Override
-		public Function<Context<IBind<ITerm>>, String> visitTerm(ITerm e) {
+		public Function<Context<Bind<Term>>, String> visitTerm(Term e) {
 			return TermVisitor.super.visitTerm(e);
 		}
 
 		@Override
-		public PrintBind<IBind<ITerm>, ITerm> printBind() {
+		public PrintBind<Bind<Term>, Term> printBind() {
 			return new PrintBindImpl();
 		}
 	}
 
-	class PrintBindImpl implements PrintBind<IBind<ITerm>, ITerm>,
-			BindVisitor<Function<Context<IBind<ITerm>>, String>, ITerm> {
+	class PrintBindImpl implements PrintBind<Bind<Term>, Term>,
+			BindVisitor<Function<Context<Bind<Term>>, String>, Term> {
 		@Override
-		public Print<ITerm, IBind<ITerm>> printTerm() {
+		public Print<Term, Bind<Term>> printTerm() {
 			return new PrintImpl();
 		}
 	}
 
-	class IsNumericValImpl implements IsNumericVal<ITerm>, TermVisitor<Boolean> {
+	class IsNumericValImpl implements IsNumericVal<Term>, TermVisitor<Boolean> {
 	}
 
-	class IsValImpl implements fulluntyped.IsVal<ITerm>, TermVisitor<Boolean> {
+	class IsValImpl implements fulluntyped.IsVal<Term>, TermVisitor<Boolean> {
 	}
 
-	class TermShiftAndSubstImpl implements TermShiftAndSubst<ITerm> {
-		class TmMapImpl implements TmMap<ITerm>,
-				TermVisitor<Function<Tuple2<TmMap.VarMapper<ITerm>, Integer>, ITerm>> {
-			public TermAlg<ITerm, ITerm> alg() {
+	class TermShiftAndSubstImpl implements TermShiftAndSubst<Term> {
+		class TmMapImpl implements TmMap<Term>,
+				TermVisitor<Function<TmMapCtx<Term>, Term>> {
+			public GTermAlg<Term, Term> alg() {
 				return fact;
 			}
 		}
 
-		public TmMap<ITerm> tmMap() {
+		public TmMap<Term> tmMap() {
 			return new TmMapImpl();
 		}
 
 		@Override
-		public VarAppAlg<ITerm, ITerm> alg() {
+		public varapp.termalg.shared.GTermAlg<Term, Term> alg() {
 			return fact;
 		}
 	}
 
-	abstract class Eval1Impl implements Eval1<ITerm, IBind<ITerm>>,
-			TermVisitor<ITerm> {
+	abstract class Eval1Impl implements Eval1<Term, Bind<Term>>,
+			TermVisitor<Term> {
 
 		@Override
-		public TermShiftAndSubst<ITerm> termShiftAndSubst() {
+		public TermShiftAndSubst<Term> termShiftAndSubst() {
 			return new TermShiftAndSubstImpl();
 		}
 
 		@Override
-		public IsNumericVal<ITerm> isNumericVal() {
+		public IsNumericVal<Term> isNumericVal() {
 			return new IsNumericValImpl();
 		}
 
 		@Override
-		public IsVal<ITerm> isVal() {
+		public IsVal<Term> isVal() {
 			return isVal;
 		}
 
 		@Override
-		public BindingAlgMatcher<IBind<ITerm>, ITerm, ITerm> bindMatcher() {
+		public BindingAlgMatcher<Bind<Term>, Term, Term> bindMatcher() {
 			return new BindingAlgMatcherImpl<>();
 		}
 
 		@Override
-		public TermAlg<ITerm, ITerm> alg() {
+		public GTermAlg<Term, Term> alg() {
 			return fact;
 		}
 
-		public TermAlgMatcher<ITerm, ITerm> matcher() {
+		public TermAlgMatcher<Term, Term> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
 	}
 
-	abstract class EvalImpl implements Eval<ITerm> {
+	abstract class EvalImpl implements Eval<Term> {
 		@Override
-		public boolean isVal(ITerm t) {
+		public boolean isVal(Term t) {
 			return t.accept(isVal);
 		}
 	}
 
-	EvalImpl evalCtx(Context<IBind<ITerm>> ctx) {
+	EvalImpl evalCtx(Context<Bind<Term>> ctx) {
 		return new EvalImpl() {
 			@Override
-			public ITerm eval1(ITerm t) {
+			public Term eval1(Term t) {
 				return t.accept(new Eval1Impl() {
 					@Override
-					public Context<IBind<ITerm>> ctx() {
+					public Context<Bind<Term>> ctx() {
 						return ctx;
 					}
 				});
@@ -132,31 +132,31 @@ public class Tests {
 
 	TermShiftAndSubstImpl termShiftAndSubst = new TermShiftAndSubstImpl();
 	TermAlgFactory fact = new TermAlgFactory();
-	BindingAlgFactory<ITerm> bindFact = new BindingAlgFactory<>();
-	Context<IBind<ITerm>> ctx = new Context<>(new BindingAlgFactory<>());
+	BindingAlgFactory<Term> bindFact = new BindingAlgFactory<>();
+	Context<Bind<Term>> ctx = new Context<>(new BindingAlgFactory<>());
 	PrintImpl print = new PrintImpl();
 	PrintBindImpl printBind = new PrintBindImpl();
 	IsValImpl isVal = new IsValImpl();
 	EvalImpl eval = evalCtx(ctx);
 
-	ITerm t = fact.TmTrue();
-	ITerm f = fact.TmFalse();
-	ITerm if_f_then_t_else_f = fact.TmIf(f, t, f);
-	ITerm x = fact.TmVar(0, 1);
-	ITerm id = fact.TmAbs("x", x);
-	ITerm lam_x_xx = fact.TmAbs("x", fact.TmApp(x, x));
-	ITerm id_lam_x_xx = fact.TmApp(id, fact.TmAbs("x", fact.TmApp(x, x)));
-	ITerm record = fact.TmRecord(Arrays.asList(new Tuple2<>("x", id), new Tuple2<>("y", id_lam_x_xx)));
-	ITerm proj = fact.TmProj(record, "x");
-	ITerm hello = fact.TmString("hello");
-	ITerm timesfloat = fact.TmTimesFloat(fact.TmTimesFloat(fact.TmFloat(2f), fact.TmFloat(3f)),
+	Term t = fact.TmTrue();
+	Term f = fact.TmFalse();
+	Term if_f_then_t_else_f = fact.TmIf(f, t, f);
+	Term x = fact.TmVar(0, 1);
+	Term id = fact.TmAbs("x", x);
+	Term lam_x_xx = fact.TmAbs("x", fact.TmApp(x, x));
+	Term id_lam_x_xx = fact.TmApp(id, fact.TmAbs("x", fact.TmApp(x, x)));
+	Term record = fact.TmRecord(Arrays.asList(new Tuple2<>("x", id), new Tuple2<>("y", id_lam_x_xx)));
+	Term proj = fact.TmProj(record, "x");
+	Term hello = fact.TmString("hello");
+	Term timesfloat = fact.TmTimesFloat(fact.TmTimesFloat(fact.TmFloat(2f), fact.TmFloat(3f)),
 			fact.TmTimesFloat(fact.TmFloat(4f), fact.TmFloat(5f)));
-	ITerm o = fact.TmZero();
-	ITerm succ_pred_0 = fact.TmSucc(fact.TmPred(o));
-	ITerm let_x_t_in_x = fact.TmLet("x", t, x);
-	ITerm mixed = fact.TmLet("t", fact.TmApp(proj, t), fact.TmIf(fact.TmVar(0, 1), o, succ_pred_0));
+	Term o = fact.TmZero();
+	Term succ_pred_0 = fact.TmSucc(fact.TmPred(o));
+	Term let_x_t_in_x = fact.TmLet("x", t, x);
+	Term mixed = fact.TmLet("t", fact.TmApp(proj, t), fact.TmIf(fact.TmVar(0, 1), o, succ_pred_0));
 
-	Context<IBind<ITerm>> ctx2 = ctx.addBinding("x", bindFact.TmAbbBind(t)).addName("y");
+	Context<Bind<Term>> ctx2 = ctx.addBinding("x", bindFact.TmAbbBind(t)).addName("y");
 
 	@Test
 	public void testPrint() {
@@ -225,20 +225,20 @@ public class Tests {
 
 	@Test
 	public void testShift() {
-		ITerm x2 = fact.TmVar(1, 2);
-		ITerm y = fact.TmVar(0, 2);
+		Term x2 = fact.TmVar(1, 2);
+		Term y = fact.TmVar(0, 2);
 		assertEquals("if x then y else if y then x else x", termShiftAndSubst.termShift(0, fact.TmIf(x2, y, fact.TmIf(y, x2, x2))).accept(print).apply(ctx2));
 		assertEquals("x", termShiftAndSubst.termShift(1, x).accept(print).apply(ctx2));
 
 		// (\.\.1 (0 2)) -> (\.\.1 (0 4))
-		ITerm e = fact.TmAbs("x", fact.TmAbs("y", fact.TmApp(fact.TmVar(1, 3), fact.TmApp(fact.TmVar(0, 3), fact.TmVar(2, 3)))));
+		Term e = fact.TmAbs("x", fact.TmAbs("y", fact.TmApp(fact.TmVar(1, 3), fact.TmApp(fact.TmVar(0, 3), fact.TmVar(2, 3)))));
 		assertEquals("\\x.\\y.[bad index: 1/5 in {(y,), (x,)}] [bad index: 0/5 in {(y,), (x,)}] [bad index: 4/5 in {(y,), (x,)}]", termShiftAndSubst.termShift(2, e).accept(print).apply(ctx));
 	}
 
 	// Exercise 6.2.5
 	@Test
 	public void testTermSubst() {
-		ITerm e;
+		Term e;
 
 		e = fact.TmApp(fact.TmVar(0, 2), fact.TmVar(0, 2));
 		assertEquals("b b", e.accept(print).apply(ctx.addName("a").addName("b")));

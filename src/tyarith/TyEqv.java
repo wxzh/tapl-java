@@ -1,19 +1,15 @@
 package tyarith;
 
-import java.util.function.Function;
-
 import tyarith.tyalg.external.TyAlgMatcher;
-import tyarith.tyalg.shared.TyAlgQuery;
+import tyarith.tyalg.shared.GTyAlg;
+import utils.ITyEqv;
 
-public interface TyEqv<Ty> extends TyAlgQuery<Ty, Function<Ty, Boolean>>, utils.TyEqv<Ty> {
+public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>, bool.TyEqv<Ty>, nat.TyEqv<Ty> {
 	@Override
 	TyAlgMatcher<Ty, Boolean> matcher();
 
 	@Override
-	default Function<Ty, Boolean> TyNat() {
-		return ty -> matcher()
-				.TyNat(() -> true)
-				.otherwise(() -> false)
-				.visitTy(ty);
+	default ITyEqv<Ty> TyNat() {
+		return nat.TyEqv.super.TyNat();
 	}
 }

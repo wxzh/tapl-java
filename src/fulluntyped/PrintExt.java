@@ -3,9 +3,11 @@ package fulluntyped;
 import java.util.function.Function;
 
 import fulluntyped.extalg.external.ExtAlgMatcher;
+import fulluntyped.extalg.shared.GExtAlg;
 import utils.Context;
 
-public interface PrintExt<Term, Bind> extends fulluntyped.extalg.shared.ExtAlg<Term, Function<Context<Bind>, String>>, arith.Print<Term, Bind>, record.Print<Term, Bind> {
+public interface PrintExt<Term, Bind> extends GExtAlg<Term, Function<Context<Bind>, String>>, arith.Print<Term, Bind>, record.Print<Term, Bind> {
+	@Override
 	ExtAlgMatcher<Term, String> matcher();
 
 	default Function<Context<Bind>, String> TmString(String s) {

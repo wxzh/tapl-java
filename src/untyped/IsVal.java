@@ -3,7 +3,7 @@ package untyped;
 import library.Zero;
 import untyped.termalg.shared.TermAlgQuery;
 
-public interface IsVal<Term> extends TermAlgQuery<Term, Boolean> {
+public interface IsVal<Term> extends TermAlgQuery<Term, Boolean>, varapp.IsVal<Term> {
 	@Override
 	default Zero<Boolean> m() {
 		return () -> false;

@@ -1,12 +1,17 @@
 package arith;
 
 import arith.termalg.external.TermAlgMatcher;
+import arith.termalg.shared.GTermAlg;
 import arith.termalg.shared.TermAlgQuery;
 import library.Zero;
+import nat.IsNumericVal;
 
-public interface Eval1<Term> extends TermAlgQuery<Term, Term>, Eval1Bool<Term>, Eval1Nat<Term> {
+public interface Eval1<Term> extends TermAlgQuery<Term, Term>, bool.Eval1<Term>, nat.Eval1<Term> {
+	@Override
 	TermAlgMatcher<Term, Term> matcher();
-	arith.termalg.shared.TermAlg<Term, Term> alg();
+	@Override
+	GTermAlg<Term, Term> alg();
+	@Override
 	IsNumericVal<Term> isNumericVal();
 
 	@Override
@@ -20,6 +25,6 @@ public interface Eval1<Term> extends TermAlgQuery<Term, Term>, Eval1Bool<Term>, 
 
 	@Override
 	default Zero<Term> m() {
-		return Eval1Bool.super.m();
+		return bool.Eval1.super.m();
 	}
 }

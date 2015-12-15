@@ -1,9 +1,13 @@
-package utils;
+package varapp;
 
 import java.util.function.Function;
 
-public interface PrintVarApp<Term, Bind> extends utils.varappalg.shared.VarAppAlg<Term, Function<Context<Bind>, String>> {
-	untyped.PrintBind<Bind> printBind();
+import utils.Context;
+import utils.PrintBind;
+import varapp.termalg.shared.GTermAlg;
+
+public interface Print<Term, Bind> extends GTermAlg<Term, Function<Context<Bind>, String>> {
+	PrintBind<Bind> printBind();
 
 	@Override
 	default Function<Context<Bind>, String> TmApp(Term t1, Term t2) {

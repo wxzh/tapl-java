@@ -2,6 +2,7 @@ package fulluntyped;
 
 import fulluntyped.bindingalg.external.BindingAlgMatcher;
 import fulluntyped.termalg.external.TermAlgMatcher;
+import fulluntyped.termalg.shared.GTermAlg;
 import fulluntyped.termalg.shared.TermAlgQuery;
 import library.Zero;
 import utils.Context;
@@ -13,7 +14,7 @@ public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, untyped.Eva
 	TermAlgMatcher<Term, Term> matcher();
 	BindingAlgMatcher<Bind, Term, Term> bindMatcher();
 	@Override
-	fulluntyped.termalg.shared.TermAlg<Term, Term> alg();
+	GTermAlg<Term, Term> alg();
 	@Override
 	TermShiftAndSubst<Term> termShiftAndSubst();
 

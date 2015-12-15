@@ -3,9 +3,11 @@ package fullsimple;
 import java.util.List;
 
 import fullsimple.termalg.external.TermAlgMatcher;
+import fullsimple.termalg.shared.GTermAlg;
 import fullsimple.termalg.shared.TermAlgQuery;
 import fulluntyped.Eval1Ext;
 import library.Tuple3;
+import library.Zero;
 import utils.Context;
 
 public interface Eval1<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Term>, simplebool.Eval1<Term, Ty>, Eval1Ext<Term, Bind> {
@@ -13,7 +15,7 @@ public interface Eval1<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Term>, sim
 	@Override
 	IsVal<Term, Ty> isVal();
 	@Override
-	fullsimple.termalg.shared.TermAlg<Term, Ty, Term> alg();
+	GTermAlg<Term, Ty, Term> alg();
 	@Override
 	TermAlgMatcher<Term, Ty, Term> matcher();
 	@Override
@@ -39,5 +41,10 @@ public interface Eval1<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Term>, sim
 	@Override
 	default Term TmFix(Term t) {
 		return alg().TmFix(visitTerm(t));
+	}
+
+	@Override
+	default Zero<Term> m() {
+		return Eval1Ext.super.m();
 	}
 }

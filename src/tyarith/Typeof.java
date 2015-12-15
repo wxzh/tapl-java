@@ -2,15 +2,16 @@ package tyarith;
 
 import java.util.function.Function;
 
-import arith.termalg.shared.TermAlgQuery;
+import arith.termalg.shared.GTermAlg;
 import library.Zero;
 import tyarith.tyalg.external.TyAlgMatcher;
+import tyarith.tyalg.shared.GTyAlg;
 import utils.Context;
 
 public interface Typeof<Term, Ty, Bind>
-		extends TermAlgQuery<Term, Function<Context<Bind>, Ty>>, utils.Typeof<Term, Ty, Bind> {
+		extends GTermAlg<Term, Function<Context<Bind>, Ty>>, bool.Typeof<Term, Ty, Bind>, nat.Typeof<Term, Ty, Bind> {
 	@Override
-	tyarith.tyalg.shared.TyAlg<Ty, Ty> tyAlg();
+	GTyAlg<Ty, Ty> tyAlg();
 
 	@Override
 	TyAlgMatcher<Ty, Ty> tyMatcher();
@@ -22,31 +23,12 @@ public interface Typeof<Term, Ty, Bind>
 	default Function<Context<Bind>, Ty> TmIsZero(Term t) {
 		return ctx -> {
 			Ty tyT = visitTerm(t).apply(ctx);
-			return tyEqv().visitTy(tyT).apply(tyAlg().TyNat()) ? tyAlg().TyBool() : m().empty().apply(ctx);
+			return tyEqv().visitTy(tyT).tyEqv(tyAlg().TyNat()) ? tyAlg().TyBool() : m().empty().apply(ctx);
 		};
-	}
-
-	@Override
-	default Function<Context<Bind>, Ty> TmZero() {
-		return ctx -> tyAlg().TyNat();
-	}
-
-	@Override
-	default Function<Context<Bind>, Ty> TmSucc(Term t) {
-		return ctx -> {
-			Ty tyNat = tyAlg().TyNat();
-			Ty tyT = visitTerm(t).apply(ctx);
-			return tyEqv().visitTy(tyT).apply(tyNat) ? tyNat : m().empty().apply(ctx);
-		};
-	}
-
-	@Override
-	default Function<Context<Bind>, Ty> TmPred(Term t) {
-		return TmSucc(t);
 	}
 
 	@Override
 	default Zero<Function<Context<Bind>, Ty>> m() {
-		return utils.Typeof.super.m();
+		return nat.Typeof.super.m();
 	}
 }
