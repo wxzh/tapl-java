@@ -7,13 +7,13 @@
 - ~~fulluntyped~~ (chapters 5 - 7)
 - ~~tyarith~~ (chapter 8)
 - ~~simplebool~~ (chapter 10)
-- `fullsimple` (chapter 9 and 11)
+- ~~fullsimple~~ (chapter 9 and 11)
 - `fullref` (chapter 13, 18)
-- `fullerror` (chapter 14)
-- `rcdsubbot` (chapter 15)
+- ~~fullerror~~ (chapter 14)
+- ~~rcdsubbot~~ (chapter 15)
 - `fullsub` (chapters 15 - 17)
 - `joinsub` (chapter 16)
-- `bot` (chapter 16)
+- ~~bot~~ (chapter 16)
 - `fullequirec` (chapter 20).
 - `fullisorec` (chapter 20).
 - `equirec` (chapter 21)
