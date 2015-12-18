@@ -10,6 +10,7 @@ import record.termalg.shared.GTermAlg;
 import utils.Context;
 
 public interface Print<Term, Bind> extends GTermAlg<Term, Function<Context<Bind>, String>> {
+	@Override
 	default Function<Context<Bind>, String> TmRecord(List<Tuple2<String, Term>> fields) {
 		return ctx -> "{" + IntStream.range(0, fields.size()).mapToObj(i -> {
 			String l = fields.get(i)._1;
@@ -18,6 +19,7 @@ public interface Print<Term, Bind> extends GTermAlg<Term, Function<Context<Bind>
 		}).collect(Collectors.joining(",")) + "}";
 	}
 
+	@Override
 	default Function<Context<Bind>, String> TmProj(Term t, String l) {
 		return ctx -> visitTerm(t).apply(ctx) + "." + l;
 	}

@@ -7,9 +7,7 @@ public interface JoinMeet<Ty> {
 	Subtype<Ty> subtype();
 	TyAlgMatcher<Ty, Ty> matcher();
 	GTyAlg<Ty, Ty> alg();
-
 	Join<Ty> join();
-
 	Meet<Ty> meet();
 
 	default Ty join(Ty ty1, Ty ty2) {

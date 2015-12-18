@@ -3,7 +3,6 @@ package fullerror;
 import fullerror.tyalg.shared.TyAlgQuery;
 import library.Zero;
 
-// page: 218
 public interface Join<Ty> extends JoinMeet<Ty>, TyAlgQuery<Ty, Join.IJoin<Ty>> {
 	interface IJoin<Ty> {
 		Ty join(Ty ty);

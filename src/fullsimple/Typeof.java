@@ -1,11 +1,13 @@
 package fullsimple;
 
+import java.util.List;
 import java.util.function.Function;
 
 import fullsimple.bindingalg.shared.GBindingAlg;
 import fullsimple.termalg.shared.TermAlgQuery;
 import fullsimple.tyalg.external.TyAlgMatcher;
 import fullsimple.tyalg.shared.GTyAlg;
+import library.Tuple2;
 import library.Zero;
 import utils.Context;
 
@@ -85,5 +87,13 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	@Override
 	default Zero<Function<Context<Bind>, Ty>> m() {
 		return simplebool.Typeof.super.m();
+	}
+	@Override
+	default Function<Context<Bind>, Ty> TmRecord(List<Tuple2<String, Term>> fields) {
+		return record.Typeof.super.TmRecord(fields);
+	}
+	@Override
+	default Function<Context<Bind>, Ty> TmProj(Term t, String l) {
+		return record.Typeof.super.TmProj(t, l);
 	}
 }

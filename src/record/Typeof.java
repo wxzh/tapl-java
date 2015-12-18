@@ -5,13 +5,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import library.Tuple2;
-import record.termalg.shared.TermAlgQuery;
+import record.termalg.shared.GTermAlg;
 import record.tyalg.external.TyAlgMatcher;
 import record.tyalg.shared.GTyAlg;
 import utils.Context;
 
-public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Function<Context<Bind>, Ty>> {
+public interface Typeof<Term, Ty, Bind> extends GTermAlg<Term, Function<Context<Bind>, Ty>>, typed.Typeof<Term, Ty, Bind> {
+	@Override
 	GTyAlg<Ty, Ty> tyAlg();
+	@Override
 	TyAlgMatcher<Ty, Ty> tyMatcher();
 
 	@Override

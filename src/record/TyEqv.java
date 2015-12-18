@@ -7,7 +7,8 @@ import library.Tuple2;
 import record.tyalg.external.TyAlgMatcher;
 import utils.ITyEqv;
 
-public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>{
+public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>, typed.TyEqv<Ty> {
+	@Override
 	TyAlgMatcher<Ty, Boolean> matcher();
 
 	@Override

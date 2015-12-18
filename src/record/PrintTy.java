@@ -9,7 +9,7 @@ import library.Tuple2;
 import record.tyalg.shared.GTyAlg;
 import utils.Context;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>> {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>>, typed.PrintTy<Ty, Bind> {
 	default Function<Context<Bind>, String> TyRecord(List<Tuple2<String, Ty>> fields) {
 		return ctx -> "{" + IntStream.range(0, fields.size()).mapToObj(i -> {
 			String label = fields.get(i)._1;

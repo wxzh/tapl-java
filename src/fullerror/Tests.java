@@ -59,7 +59,7 @@ public class Tests {
 		}
 	}
 
-	class SubtypeImpl implements Subtype<Ty>, TyVisitor<ISubtype<Ty>>{
+	class SubtypeImpl implements Subtype<Ty> {
 		@Override
 		public TyAlgMatcher<Ty, Boolean> matcher() {
 			return new TyAlgMatcherImpl<>();
@@ -70,9 +70,12 @@ public class Tests {
 			return tyEqv;
 		}
 
+		class SubtypeAlgImpl extends SubtypeImpl implements SubtypeAlg<Ty>, TyVisitor<ISubtype<Ty>> {
+		}
+
 		@Override
-		public GTyAlg<Ty, Ty> alg() {
-			return tyFact;
+		public SubtypeAlg<Ty> subtype() {
+			return new SubtypeAlgImpl();
 		}
 	}
 

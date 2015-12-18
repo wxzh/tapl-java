@@ -6,6 +6,6 @@ import annotation.Free;
 import library.Tuple2;
 
 @Free
-public interface TyAlg<Ty> {
+public interface TyAlg<Ty> extends typed.TyAlg<Ty> {
 	Ty TyRecord(List<Tuple2<String, Ty>> els);
 }
