@@ -1,6 +1,6 @@
 package fullsimple;
 
-public interface TermShiftAndSubst<Term, Ty> extends simplebool.TermShiftAndSubst<Term, Ty>{
+public interface TermShiftAndSubst<Term, Ty> extends variant.TermShiftAndSubst<Term, Ty>{
 	@Override
 	TmMap<Term, Ty> tmMap();
 }

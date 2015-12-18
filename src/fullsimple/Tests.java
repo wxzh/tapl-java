@@ -51,11 +51,6 @@ public class Tests {
 
 	class PrintTyImpl implements PrintTy<Ty, Bind<Term<Ty>, Ty>>,
 			TyVisitor<Function<Context<Bind<Term<Ty>, Ty>>, String>> {
-
-		@Override
-		public TyAlgMatcher<Ty, String> matcher() {
-			return new TyAlgMatcherImpl<>();
-		}
 	}
 
 	class PrintBindImpl implements PrintBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty>,

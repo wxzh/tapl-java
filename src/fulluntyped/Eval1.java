@@ -7,7 +7,7 @@ import fulluntyped.termalg.shared.TermAlgQuery;
 import library.Zero;
 import utils.Context;
 
-public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, untyped.Eval1<Term>, Eval1Ext<Term, Bind> {
+public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, untyped.Eval1<Term>, extension.Eval1<Term, Bind> {
 	@Override
 	IsVal<Term> isVal();
 	@Override

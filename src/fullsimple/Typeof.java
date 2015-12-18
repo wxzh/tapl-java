@@ -1,18 +1,15 @@
 package fullsimple;
 
-import java.util.List;
 import java.util.function.Function;
 
 import fullsimple.bindingalg.shared.GBindingAlg;
 import fullsimple.termalg.shared.TermAlgQuery;
 import fullsimple.tyalg.external.TyAlgMatcher;
 import fullsimple.tyalg.shared.GTyAlg;
-import library.Tuple2;
 import library.Zero;
 import utils.Context;
 
-public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>,
-		nat.Typeof<Term, Ty, Bind>, simplebool.Typeof<Term, Ty, Bind>, record.Typeof<Term, Ty, Bind>, variant.Typeof<Term, Ty, Bind> {
+public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>, extension.Typeof<Term, Ty, Bind>, variant.Typeof<Term, Ty, Bind> {
 	@Override
 	TyEqv<Ty> tyEqv();
 	@Override
@@ -31,30 +28,6 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 			return visitTerm(t2).apply(ctx.addBinding(x, bindAlg().VarBind(tyT1)));
 		};
 	}
-
-	@Override
-	default Function<Context<Bind>, Ty> TmTimesFloat(Term t1, Term t2) {
-		return ctx -> {
-			Ty tyT1 = visitTerm(t1).apply(ctx);
-			Ty tyT2 = visitTerm(t2).apply(ctx);
-			Ty tyFloat = tyAlg().TyFloat();
-			return tyEqv().visitTy(tyT1).tyEqv(tyFloat) &&
-					tyEqv().visitTy(tyT2).tyEqv(tyFloat)
-					? tyFloat
-					: m().empty().apply(ctx);
-		};
-	}
-
-	@Override
-	default Function<Context<Bind>, Ty> TmFloat(float p1) {
-		return ctx -> tyAlg().TyFloat();
-	}
-
-	@Override
-	default Function<Context<Bind>, Ty> TmString(String p1) {
-		return ctx -> tyAlg().TyString();
-	}
-
 	@Override
 	default Function<Context<Bind>, Ty> TmUnit() {
 		return ctx -> tyAlg().TyUnit();
@@ -83,17 +56,8 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 			return tyEqv().visitTy(tyT).tyEqv(ty) ? ty : m().empty().apply(ctx);
 		};
 	}
-
 	@Override
 	default Zero<Function<Context<Bind>, Ty>> m() {
-		return simplebool.Typeof.super.m();
-	}
-	@Override
-	default Function<Context<Bind>, Ty> TmRecord(List<Tuple2<String, Term>> fields) {
-		return record.Typeof.super.TmRecord(fields);
-	}
-	@Override
-	default Function<Context<Bind>, Ty> TmProj(Term t, String l) {
-		return record.Typeof.super.TmProj(t, l);
+		return variant.Typeof.super.m();
 	}
 }

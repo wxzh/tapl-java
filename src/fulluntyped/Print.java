@@ -7,7 +7,7 @@ import fulluntyped.termalg.shared.GTermAlg;
 import utils.Context;
 
 public interface Print<Term, Bind> extends GTermAlg<Term, Function<Context<Bind>, String>>,
-		untyped.Print<Term, Bind>, PrintExt<Term, Bind> {
+		untyped.Print<Term, Bind>, extension.Print<Term, Bind> {
 	@Override
 	PrintBind<Bind, Term> printBind();
 

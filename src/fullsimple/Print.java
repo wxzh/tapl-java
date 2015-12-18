@@ -4,13 +4,12 @@ import java.util.function.Function;
 
 import fullsimple.termalg.external.TermAlgMatcher;
 import fullsimple.termalg.shared.GTermAlg;
-import fulluntyped.PrintExt;
 import utils.Context;
 
-public interface Print<Term, Ty, Bind>
-		extends GTermAlg<Term, Ty, Function<Context<Bind>, String>>, simplebool.Print<Term, Ty, Bind>, variant.Print<Term, Ty, Bind>, PrintExt<Term, Bind> {
+public interface Print<Term, Ty, Bind> extends GTermAlg<Term, Ty, Function<Context<Bind>, String>>, variant.Print<Term, Ty, Bind>, extension.Print<Term, Bind> {
 	@Override
 	TermAlgMatcher<Term, Ty, String> matcher();
+
 	@Override
 	PrintTy<Ty, Bind> printTy();
 
@@ -34,7 +33,7 @@ public interface Print<Term, Ty, Bind>
 		return ctx -> "Unit";
 	}
 
-	default Function<utils.Context<Bind>,String> TmLet(String x, Term t1, Term t2) {
+	default Function<utils.Context<Bind>, String> TmLet(String x, Term t1, Term t2) {
 		return ctx -> "let " + x + "=" + visitTerm(t1).apply(ctx) + " in " + visitTerm(t2).apply(ctx.addName(x));
 	}
 }
