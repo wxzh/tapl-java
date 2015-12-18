@@ -78,7 +78,11 @@ public class Tests {
 
 	class GetTypeFromBindImpl implements GetTypeFromBind<Bind<Ty>, Ty>, BindVisitor<Ty, Ty> {}
 
-	class JoinImpl implements Join<Ty, Bind<Ty>>, TyVisitor<IJoin<Ty>> {
+	class JoinMeetImpl implements JoinMeet<Ty> {
+		@Override
+		public Subtype<Ty> subtype() {
+			return subtype;
+		}
 
 		@Override
 		public TyAlgMatcher<Ty, Ty> matcher() {
@@ -86,41 +90,24 @@ public class Tests {
 		}
 
 		@Override
-		public Subtype<Ty> subtype() {
-			return subtype;
-		}
-
-		@Override
 		public GTyAlg<Ty, Ty> alg() {
 			return tyFact;
 		}
 
-		class MeetImpl implements Meet<Ty, Bind<Ty>>, TyVisitor<IMeet<Ty>> {
-			@Override
-			public TyAlgMatcher<Ty, Ty> matcher() {
-				return new TyAlgMatcherImpl<>();
-			}
+		class JoinImpl extends JoinMeetImpl implements Join<Ty>, TyVisitor<Join.IJoin<Ty>> {}
+		class MeetImpl extends JoinMeetImpl implements Meet<Ty>, TyVisitor<Meet.IMeet<Ty>> {}
 
-			@Override
-			public Subtype<Ty> subtype() {
-				return subtype;
-			}
-
-			@Override
-			public GTyAlg<Ty, Ty> alg() {
-				return tyFact;
-			}
-
-			@Override
-			public Join<Ty, Bind<Ty>> join() {
-				return JoinImpl.this;
-			}
-		}
 		@Override
-		public Meet<Ty, Bind<Ty>> meet() {
+		public Meet<Ty> meet() {
 			return new MeetImpl();
 		}
+
+		@Override
+		public Join<Ty> join() {
+			return new JoinImpl();
+		}
 	}
+
 
 	class TypeofImpl implements Typeof<Term<Ty>, Ty, Bind<Ty>>, TermVisitor<Function<Context<Bind<Ty>>, Ty>, Ty> {
 		@Override
@@ -129,8 +116,8 @@ public class Tests {
 		}
 
 		@Override
-		public Join<Ty, Bind<Ty>> join() {
-			return new JoinImpl();
+		public JoinMeet<Ty> joinMeet() {
+			return new JoinMeetImpl();
 		}
 
 		@Override
