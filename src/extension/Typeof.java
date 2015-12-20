@@ -42,6 +42,14 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Function<Cont
 	}
 
 	@Override
+	default Function<Context<Bind>, Ty> TmLet(String x, Term t1, Term t2) {
+		return ctx -> {
+			Ty tyT1 = visitTerm(t1).apply(ctx);
+			return visitTerm(t2).apply(ctx.addBinding(x, bindAlg().VarBind(tyT1)));
+		};
+	}
+
+	@Override
 	default Function<Context<Bind>, Ty> TmRecord(List<Tuple2<String, Term>> fields) {
 		return record.Typeof.super.TmRecord(fields);
 	}

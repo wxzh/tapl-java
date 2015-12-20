@@ -10,14 +10,6 @@ public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, St
 		return ctx -> "Float";
 	}
 
-	default Function<Context<Bind>, String> TyId(String b) {
-		return ctx -> b;
-	}
-
-	default Function<Context<Bind>, String> TyUnit() {
-		return ctx -> "Unit";
-	}
-
 	default Function<Context<Bind>, String> TyString() {
 		return ctx -> "String";
 	}

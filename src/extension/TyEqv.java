@@ -1,7 +1,7 @@
 package extension;
 
-import fullsimple.tyalg.external.TyAlgMatcher;
-import fullsimple.tyalg.shared.GTyAlg;
+import extension.tyalg.external.TyAlgMatcher;
+import extension.tyalg.shared.GTyAlg;
 import utils.ITyEqv;
 
 public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>, tyarith.TyEqv<Ty>, record.TyEqv<Ty> {
@@ -9,18 +9,8 @@ public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>, tyarith.TyEqv<Ty>, re
 	TyAlgMatcher<Ty, Boolean> matcher();
 
 	@Override
-	default ITyEqv<Ty> TyUnit() {
-		return ty -> matcher().TyUnit(() -> true).otherwise(() -> false).visitTy(ty);
-	}
-
-	@Override
 	default ITyEqv<Ty> TyFloat() {
 		return ty -> matcher().TyFloat(() -> true).otherwise(() -> false).visitTy(ty);
-	}
-
-	@Override
-	default ITyEqv<Ty> TyId(String b1) {
-		return ty -> matcher().TyId(b2 -> b1 == b2).otherwise(() -> false).visitTy(ty);
 	}
 
 	@Override

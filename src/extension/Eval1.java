@@ -3,8 +3,9 @@ package extension;
 import extension.termalg.external.TermAlgMatcher;
 import extension.termalg.shared.GTermAlg;
 import extension.termalg.shared.TermAlgQuery;
+import library.Zero;
 
-public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, arith.Eval1<Term>, record.Eval1<Term> {
+public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, arith.Eval1<Term>, varapp.Eval1<Term>, record.Eval1<Term> {
 	@Override
 	IsVal<Term> isVal();
 	@Override
@@ -20,5 +21,9 @@ public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, arith.Eval1
 						.visitTerm(t2))
 				.otherwise(() -> alg().TmTimesFloat(visitTerm(t1), t2))
 				.visitTerm(t1);
+	}
+	@Override
+	default Zero<Term> m() {
+		return varapp.Eval1.super.m();
 	}
 }

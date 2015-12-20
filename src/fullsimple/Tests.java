@@ -139,12 +139,6 @@ public class Tests {
 	}
 
 	@Test
-	public void testPrintTyId() {
-		ty = tyFact.TyId("Type");
-		assertEquals("Type", ty.accept(printTy).apply(ctx));
-	}
-
-	@Test
 	public void testPrintTyUnit() {
 		ty = tyFact.TyUnit();
 		assertEquals("Unit", ty.accept(printTy).apply(ctx));

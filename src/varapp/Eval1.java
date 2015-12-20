@@ -1,10 +1,10 @@
 package varapp;
 
 import library.Zero;
-import untyped.termalg.external.TermAlgMatcher;
-import untyped.termalg.shared.TermAlgQuery;
 import utils.NoRuleApplies;
+import varapp.termalg.external.TermAlgMatcher;
 import varapp.termalg.shared.GTermAlg;
+import varapp.termalg.shared.TermAlgQuery;
 
 public interface Eval1<Term> extends TermAlgQuery<Term, Term>  {
 	GTermAlg<Term, Term> alg();
