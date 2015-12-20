@@ -11,8 +11,7 @@
 - `fullref` (chapter 13, 18)
 - ~~fullerror~~ (chapter 14)
 - ~~rcdsubbot~~ (chapter 15)
-- `fullsub` (chapters 15 - 17)
-- `joinsub` (chapter 16)
+- ~~fullsub~~ (chapters 15 - 17)
 - ~~bot~~ (chapter 16)
 - `fullequirec` (chapter 20).
 - `fullisorec` (chapter 20).
