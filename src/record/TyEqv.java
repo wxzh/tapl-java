@@ -2,9 +2,9 @@ package record;
 
 import java.util.List;
 
-import fullsimple.tyalg.shared.GTyAlg;
 import library.Tuple2;
 import record.tyalg.external.TyAlgMatcher;
+import record.tyalg.shared.GTyAlg;
 import utils.ITyEqv;
 
 public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>, typed.TyEqv<Ty> {

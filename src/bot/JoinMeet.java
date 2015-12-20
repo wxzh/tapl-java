@@ -1,9 +1,9 @@
-package fullerror;
+package bot;
 
 import fullerror.tyalg.external.TyAlgMatcher;
 import fullerror.tyalg.shared.GTyAlg;
 
-public interface JoinMeet<Ty> extends bot.JoinMeet<Ty> {
+public interface JoinMeet<Ty> extends top.JoinMeet<Ty>{
 	@Override
 	Subtype<Ty> subtype();
 	@Override

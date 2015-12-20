@@ -24,6 +24,8 @@ import typed.bindingalg.external.BindVisitor;
 import typed.bindingalg.external.BindingAlgFactory;
 import typed.bindingalg.shared.GBindingAlg;
 import utils.Context;
+import utils.IJoin;
+import utils.IMeet;
 import utils.ISubtype;
 import utils.ITyEqv;
 
@@ -97,8 +99,8 @@ public class Tests {
 			return tyFact;
 		}
 
-		class JoinImpl extends JoinMeetImpl implements Join<Ty>, TyVisitor<Join.IJoin<Ty>> {}
-		class MeetImpl extends JoinMeetImpl implements Meet<Ty>, TyVisitor<Meet.IMeet<Ty>> {}
+		class JoinImpl extends JoinMeetImpl implements Join<Ty>, TyVisitor<IJoin<Ty>> {}
+		class MeetImpl extends JoinMeetImpl implements Meet<Ty>, TyVisitor<IMeet<Ty>> {}
 
 		@Override
 		public Meet<Ty> meet() {
