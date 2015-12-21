@@ -1,16 +1,14 @@
 package extension;
 
-import java.util.function.Function;
-
 import extension.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>>, tyarith.PrintTy<Ty, Bind>, record.PrintTy<Ty, Bind> {
-	default Function<Context<Bind>, String> TyFloat() {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>>, tyarith.PrintTy<Ty, Bind>, record.PrintTy<Ty, Bind> {
+	default IPrint<Bind> TyFloat() {
 		return ctx -> "Float";
 	}
 
-	default Function<Context<Bind>, String> TyString() {
+	default IPrint<Bind> TyString() {
 		return ctx -> "String";
 	}
 }

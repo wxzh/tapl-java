@@ -1,12 +1,10 @@
 package fulluntyped;
 
-import java.util.function.Function;
-
 import fulluntyped.termalg.external.TermAlgMatcher;
 import fulluntyped.termalg.shared.GTermAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface Print<Term, Bind> extends GTermAlg<Term, Function<Context<Bind>, String>>,
+public interface Print<Term, Bind> extends GTermAlg<Term, IPrint<Bind>>,
 		untyped.Print<Term, Bind>, extension.Print<Term, Bind> {
 	@Override
 	PrintBind<Bind, Term> printBind();

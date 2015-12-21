@@ -1,9 +1,7 @@
 package fullerror;
 
-import java.util.function.Function;
-
 import fullerror.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>>, simplebool.PrintTy<Ty, Bind>, bot.PrintTy<Ty, Bind> {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>>, simplebool.PrintTy<Ty, Bind>, bot.PrintTy<Ty, Bind> {
 }

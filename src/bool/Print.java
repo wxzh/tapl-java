@@ -1,21 +1,19 @@
 package bool;
 
-import java.util.function.Function;
-
 import bool.termalg.shared.GTermAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface Print<Term, Bind> extends GTermAlg<Term, Function<Context<Bind>, String>> {
-	default Function<Context<Bind>, String> TmTrue() {
+public interface Print<Term, Bind> extends GTermAlg<Term, IPrint<Bind>> {
+	default IPrint<Bind> TmTrue() {
 		return ctx -> "true";
 	}
 
-	default Function<Context<Bind>, String> TmFalse() {
+	default IPrint<Bind> TmFalse() {
 		return ctx -> "false";
 	}
 
-	default Function<Context<Bind>, String> TmIf(Term t1, Term t2, Term t3) {
-		return ctx -> "if " + visitTerm(t1).apply(ctx) + " then " + visitTerm(t2).apply(ctx) + " else "
-				+ visitTerm(t3).apply(ctx);
+	default IPrint<Bind> TmIf(Term t1, Term t2, Term t3) {
+		return ctx -> "if " + visitTerm(t1).print(ctx) + " then " + visitTerm(t2).print(ctx) + " else "
+				+ visitTerm(t3).print(ctx);
 	}
 }

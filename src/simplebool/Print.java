@@ -1,11 +1,9 @@
 package simplebool;
 
-import java.util.function.Function;
-
 import simplebool.termalg.shared.GTermAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface Print<Term, Ty, Bind> extends GTermAlg<Term, Ty, Function<Context<Bind>, String>>, typed.Print<Term, Ty, Bind>, bool.Print<Term, Bind> {
+public interface Print<Term, Ty, Bind> extends GTermAlg<Term, Ty, IPrint<Bind>>, typed.Print<Term, Ty, Bind>, bool.Print<Term, Bind> {
 	@Override
 	PrintTy<Ty, Bind> printTy();
 }

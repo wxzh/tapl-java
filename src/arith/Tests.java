@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.function.Function;
-
 import org.junit.Test;
 
 import arith.termalg.external.Term;
@@ -16,6 +14,7 @@ import arith.termalg.external.TermVisitor;
 import arith.termalg.shared.GTermAlg;
 import utils.Context;
 import utils.Eval;
+import utils.IPrint;
 import utils.NoRuleApplies;
 import utils.bindingalg.external.Bind;
 import utils.bindingalg.external.BindingAlgFactory;
@@ -28,7 +27,7 @@ public class Tests {
 	class IsValImpl implements IsVal<Term>, TermVisitor<Boolean> {
 	}
 
-	class PrintImpl implements Print<Term, Bind>, TermVisitor<Function<Context<Bind>, String>> {
+	class PrintImpl implements Print<Term, Bind>, TermVisitor<IPrint<Bind>> {
 		public TermAlgMatcher<Term, String> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
@@ -82,7 +81,7 @@ public class Tests {
 	private Term iszero_pred_succ_succ_0 = alg.TmIsZero(alg.TmPred(alg.TmSucc(alg.TmSucc(zero))));
 
 	String print(Term t) {
-		return t.accept(print).apply(ctx);
+		return t.accept(print).print(ctx);
 	}
 
 	@Test

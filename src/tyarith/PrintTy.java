@@ -1,9 +1,7 @@
 package tyarith;
 
-import java.util.function.Function;
-
 import tyarith.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>>, bool.PrintTy<Ty, Bind>, nat.PrintTy<Ty, Bind> {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>>, bool.PrintTy<Ty, Bind>, nat.PrintTy<Ty, Bind> {
 }

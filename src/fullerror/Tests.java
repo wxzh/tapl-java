@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.function.Function;
-
 import org.junit.Test;
 
 import fullerror.termalg.external.Term;
@@ -26,16 +24,17 @@ import typed.bindingalg.shared.GBindingAlg;
 import utils.Context;
 import utils.IJoin;
 import utils.IMeet;
+import utils.IPrint;
 import utils.ISubtype;
 import utils.ITyEqv;
 import utils.ITypeof;
 
 public class Tests {
-	class PrintTyImpl implements PrintTy<Ty, Bind<Ty>>, TyVisitor<Function<Context<Bind<Ty>>, String>> {
+	class PrintTyImpl implements PrintTy<Ty, Bind<Ty>>, TyVisitor<IPrint<Bind<Ty>>> {
 	}
 
 	class PrintBindImpl implements PrintBind<Bind<Ty>, Ty>,
-			BindVisitor<Function<Context<Bind<Ty>>, String>, Ty> {
+			BindVisitor<IPrint<Bind<Ty>>, Ty> {
 
 		@Override
 		public PrintTy<Ty, Bind<Ty>> printTy() {
@@ -43,7 +42,7 @@ public class Tests {
 		}
 	}
 
-	class PrintImpl implements Print<Term<Ty>, Ty, Bind<Ty>>, TermVisitor<Function<Context<Bind<Ty>>, String>, Ty> {
+	class PrintImpl implements Print<Term<Ty>, Ty, Bind<Ty>>, TermVisitor<IPrint<Bind<Ty>>, Ty> {
 		@Override
 		public PrintTy<Ty, Bind<Ty>> printTy() {
 			return printTy;
@@ -185,15 +184,15 @@ public class Tests {
 
 	@Test
 	public void printTest() {
-		assertEquals("error", error.accept(printTerm).apply(ctx));
-		assertEquals("try error with true", tryErrorWithTrue.accept(printTerm).apply(ctx));
+		assertEquals("error", error.accept(printTerm).print(ctx));
+		assertEquals("try error with true", tryErrorWithTrue.accept(printTerm).print(ctx));
 	}
 
 	@Test
 	public void printTyTest() {
-		assertEquals("Top", top.accept(printTy).apply(ctx));
-		assertEquals("Bot", bot.accept(printTy).apply(ctx));
-		assertEquals("(Bool -> Top)", arr.accept(printTy).apply(ctx));
+		assertEquals("Top", top.accept(printTy).print(ctx));
+		assertEquals("Bot", bot.accept(printTy).print(ctx));
+		assertEquals("(Bool -> Top)", arr.accept(printTy).print(ctx));
 	}
 
 	@Test

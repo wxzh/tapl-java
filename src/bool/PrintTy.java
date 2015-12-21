@@ -1,12 +1,10 @@
 package bool;
 
-import java.util.function.Function;
-
 import bool.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>> {
-	default Function<Context<Bind>, String> TyBool() {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>> {
+	default IPrint<Bind> TyBool() {
 		return ctx -> "Bool";
 	}
 }

@@ -1,13 +1,11 @@
 package top;
 
-import java.util.function.Function;
-
 import top.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>>, typed.PrintTy<Ty, Bind> {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>>, typed.PrintTy<Ty, Bind> {
 	@Override
-	default Function<Context<Bind>, String> TyTop() {
+	default IPrint<Bind> TyTop() {
 		return ctx -> "Top";
 	}
 }

@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.junit.Test;
 
@@ -27,12 +26,13 @@ import fullsimple.tyalg.shared.GTyAlg;
 import library.Tuple2;
 import library.Tuple3;
 import utils.Context;
+import utils.IPrint;
 import utils.ITyEqv;
 import utils.ITypeof;
 
 public class Tests {
 	class PrintImpl implements Print<Term<Ty>, Ty, Bind<Term<Ty>, Ty>>,
-			TermVisitor<Function<Context<Bind<Term<Ty>, Ty>>, String>, Ty> {
+			TermVisitor<IPrint<Bind<Term<Ty>, Ty>>, Ty> {
 
 		@Override
 		public PrintBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty> printBind() {
@@ -51,11 +51,11 @@ public class Tests {
 	}
 
 	class PrintTyImpl implements PrintTy<Ty, Bind<Term<Ty>, Ty>>,
-			TyVisitor<Function<Context<Bind<Term<Ty>, Ty>>, String>> {
+			TyVisitor<IPrint<Bind<Term<Ty>, Ty>>> {
 	}
 
 	class PrintBindImpl implements PrintBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty>,
-			BindVisitor<Function<Context<Bind<Term<Ty>, Ty>>, String>, Term<Ty>, Ty> {
+			BindVisitor<IPrint<Bind<Term<Ty>, Ty>>, Term<Ty>, Ty> {
 
 		@Override
 		public PrintTy<Ty, Bind<Term<Ty>, Ty>> printTy() {
@@ -136,89 +136,89 @@ public class Tests {
 	@Test
 	public void testPrintTyFloat() {
 		ty = tyFact.TyFloat();
-		assertEquals("Float", ty.accept(printTy).apply(ctx));
+		assertEquals("Float", ty.accept(printTy).print(ctx));
 	}
 
 	@Test
 	public void testPrintTyUnit() {
 		ty = tyFact.TyUnit();
-		assertEquals("Unit", ty.accept(printTy).apply(ctx));
+		assertEquals("Unit", ty.accept(printTy).print(ctx));
 	}
 
 	@Test
 	public void testPrintTyRecord() {
 		ty = tyFact.TyRecord(Arrays.asList(new Tuple2<>("bool", tyFact.TyBool()), new Tuple2<>("nat", tyFact.TyNat())));
-		assertEquals("{bool:Bool,nat:Nat}", ty.accept(printTy).apply(ctx));
+		assertEquals("{bool:Bool,nat:Nat}", ty.accept(printTy).print(ctx));
 	}
 
 	@Test
 	public void testPrintTyVariant() {
 		ty = tyFact
 				.TyVariant(Arrays.asList(new Tuple2<>("bool", tyFact.TyBool()), new Tuple2<>("nat", tyFact.TyNat())));
-		assertEquals("<bool:Bool,nat:Nat>", ty.accept(printTy).apply(ctx));
+		assertEquals("<bool:Bool,nat:Nat>", ty.accept(printTy).print(ctx));
 	}
 
 	@Test
 	public void testPrintTyArr() {
 		ty = tyFact.TyArr(tyFact.TyString(), tyFact.TyArr(tyFact.TyNat(), tyFact.TyBool()));
-		assertEquals("(String -> (Nat -> Bool))", ty.accept(printTy).apply(ctx));
+		assertEquals("(String -> (Nat -> Bool))", ty.accept(printTy).print(ctx));
 	}
 
 	@Test
 	public void testPrintVarBind() {
 		bind = bindFact.VarBind(bool);
-		assertEquals(": Bool", bind.accept(printBind).apply(ctx));
+		assertEquals(": Bool", bind.accept(printBind).print(ctx));
 	}
 
 	@Test
 	public void testPrintTyAbbBind() {
 		bind = bindFact.TyAbbBind(bool);
-		assertEquals("= Bool", bind.accept(printBind).apply(ctx));
+		assertEquals("= Bool", bind.accept(printBind).print(ctx));
 	}
 
 	@Test
 	public void testPrintTmAbbBind() {
 		bind = bindFact.TmAbbBind(t, Optional.of(tyFact.TyBool()));
-		assertEquals("= true: Bool", bind.accept(printBind).apply(ctx));
+		assertEquals("= true: Bool", bind.accept(printBind).print(ctx));
 		bind = bindFact.TmAbbBind(t, Optional.empty());
-		assertEquals("= true", bind.accept(printBind).apply(ctx));
+		assertEquals("= true", bind.accept(printBind).print(ctx));
 	}
 
 	@Test
 	public void testPrintTmUnit() {
 		term = termFact.TmUnit();
-		assertEquals("Unit", term.accept(printTerm).apply(ctx));
+		assertEquals("Unit", term.accept(printTerm).print(ctx));
 	}
 
 	@Test
 	public void testPrintTmInert() {
 		term = termFact.TmInert(bool);
-		assertEquals("inert[Bool]", term.accept(printTerm).apply(ctx));
+		assertEquals("inert[Bool]", term.accept(printTerm).print(ctx));
 	}
 
 	@Test
 	public void testPrintTmFix() {
 		term = termFact.TmFix(t);
-		assertEquals("fix true", term.accept(printTerm).apply(ctx));
+		assertEquals("fix true", term.accept(printTerm).print(ctx));
 	}
 
 	@Test
 	public void testPrintTmTag() {
 		term = termFact.TmTag("x", t, bool);
-		assertEquals("<x=true> as Bool", term.accept(printTerm).apply(ctx));
+		assertEquals("<x=true> as Bool", term.accept(printTerm).print(ctx));
 	}
 
 	@Test
 	public void testPrintTmCase() {
 		term = termFact.TmCase(t, Arrays.asList(new Tuple3<>("X", "x", termFact.TmVar(0, 2)),
 				new Tuple3<>("Y", "y", termFact.TmVar(0, 2))));
-		assertEquals("case true of <X=x>==>x| <Y=y_>==>y_", term.accept(printTerm).apply(ctx.addName("y")));
+		assertEquals("case true of <X=x>==>x| <Y=y_>==>y_", term.accept(printTerm).print(ctx.addName("y")));
 	}
 
 	@Test
 	public void testPrintLet() {
 		term = termFact.TmLet("x", t, x);
-		assertEquals("let x=true in x", term.accept(printTerm).apply(ctx));
+		assertEquals("let x=true in x", term.accept(printTerm).print(ctx));
 	}
 
 	@Test

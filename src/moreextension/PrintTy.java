@@ -1,12 +1,10 @@
 package moreextension;
 
-import java.util.function.Function;
-
 import moreextension.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.IPrint;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, Function<Context<Bind>, String>>, extension.PrintTy<Ty, Bind> {
-	default Function<Context<Bind>, String> TyUnit() {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>>, extension.PrintTy<Ty, Bind> {
+	default IPrint<Bind> TyUnit() {
 		return ctx -> "Unit";
 	}
 }
