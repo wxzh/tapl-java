@@ -1,7 +1,7 @@
 package bot;
 
-import fullerror.tyalg.external.TyAlgMatcher;
-import fullerror.tyalg.shared.GTyAlg;
+import bot.tyalg.external.TyAlgMatcher;
+import bot.tyalg.shared.GTyAlg;
 
 public interface JoinMeet<Ty> extends top.JoinMeet<Ty>{
 	@Override

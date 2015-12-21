@@ -22,6 +22,12 @@ public interface Eval1<Term, Bind> extends TermAlgQuery<Term, Term>, arith.Eval1
 				.otherwise(() -> alg().TmTimesFloat(visitTerm(t1), t2))
 				.visitTerm(t1);
 	}
+
+	@Override
+	default Term TmLet(String x, Term t1, Term t2) {
+		return isVal().visitTerm(t1) ? termShiftAndSubst().termSubstTop(t1, t2) : alg().TmLet(x, visitTerm(t1), t2);
+	}
+
 	@Override
 	default Zero<Term> m() {
 		return varapp.Eval1.super.m();
