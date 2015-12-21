@@ -1,13 +1,11 @@
 package moreextension;
 
-import java.util.function.Function;
-
-import moreextension.termalg.shared.TermAlgQuery;
+import moreextension.termalg.shared.GTermAlg;
 import moreextension.tyalg.external.TyAlgMatcher;
 import moreextension.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.ITypeof;
 
-public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>, extension.Typeof<Term, Ty, Bind> {
+public interface Typeof<Term, Ty, Bind> extends GTermAlg<Term, Ty, ITypeof<Ty, Bind>>, extension.Typeof<Term, Ty, Bind> {
 	@Override
 	TyEqv<Ty> tyEqv();
 	@Override
@@ -16,31 +14,31 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	GTyAlg<Ty, Ty> tyAlg();
 
 	@Override
-	default Function<Context<Bind>, Ty> TmUnit() {
+	default ITypeof<Ty, Bind> TmUnit() {
 		return ctx -> tyAlg().TyUnit();
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmInert(Ty ty) {
+	default ITypeof<Ty, Bind> TmInert(Ty ty) {
 		return ctx -> ty;
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmFix(Term t) {
+	default ITypeof<Ty, Bind> TmFix(Term t) {
 		return ctx -> {
-			Ty tyT = visitTerm(t).apply(ctx);
+			Ty tyT = visitTerm(t).typeof(ctx);
 			return tyMatcher()
-					.TyArr(ty1 -> ty2 -> tyEqv().visitTy(ty1).tyEqv(ty2) ? ty2 : m().empty().apply(ctx))
-					.otherwise(() -> m().empty().apply(ctx))
+					.TyArr(ty1 -> ty2 -> tyEqv().visitTy(ty1).tyEqv(ty2) ? ty2 : m().empty().typeof(ctx))
+					.otherwise(() -> m().empty().typeof(ctx))
 					.visitTy(tyT);
 		};
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmAscribe(Term t, Ty ty) {
+	default ITypeof<Ty, Bind> TmAscribe(Term t, Ty ty) {
 		return ctx -> {
-			Ty tyT = visitTerm(t).apply(ctx);
-			return tyEqv().visitTy(tyT).tyEqv(ty) ? ty : m().empty().apply(ctx);
+			Ty tyT = visitTerm(t).typeof(ctx);
+			return tyEqv().visitTy(tyT).tyEqv(ty) ? ty : m().empty().typeof(ctx);
 		};
 	}
 }

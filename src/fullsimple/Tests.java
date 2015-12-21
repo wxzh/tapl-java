@@ -28,6 +28,7 @@ import library.Tuple2;
 import library.Tuple3;
 import utils.Context;
 import utils.ITyEqv;
+import utils.ITypeof;
 
 public class Tests {
 	class PrintImpl implements Print<Term<Ty>, Ty, Bind<Term<Ty>, Ty>>,
@@ -79,7 +80,7 @@ public class Tests {
 	}
 
 	class TypeofImpl implements Typeof<Term<Ty>, Ty, Bind<Term<Ty>, Ty>>,
-			TermVisitor<Function<Context<Bind<Term<Ty>, Ty>>, Ty>, Ty> {
+			TermVisitor<ITypeof<Ty, Bind<Term<Ty>, Ty>>, Ty> {
 		@Override
 		public GetTypeFromBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty> getTypeFromBind() {
 			return new GetTypeFromBindImpl();
@@ -222,7 +223,7 @@ public class Tests {
 
 	@Test
 	public void testTypeofTmTrue() {
-		ty = t.accept(typeof).apply(ctx);
+		ty = t.accept(typeof).typeof(ctx);
 		assertTrue(bool.accept(tyEqual).tyEqv(ty));
 	}
 
@@ -230,15 +231,15 @@ public class Tests {
 	public void testTypeofTmAscribe() {
 		ty = tyFact.TyUnit();
 		term = termFact.TmAscribe(termFact.TmUnit(), ty);
-		assertTrue(ty.accept(tyEqual).tyEqv(term.accept(typeof).apply(ctx)));
-		assertFalse(bool.accept(tyEqual).tyEqv(term.accept(typeof).apply(ctx)));
+		assertTrue(ty.accept(tyEqual).tyEqv(term.accept(typeof).typeof(ctx)));
+		assertFalse(bool.accept(tyEqual).tyEqv(term.accept(typeof).typeof(ctx)));
 	}
 
 	@Test
 	public void testTypeofTmTag() {
 		ty = tyFact.TyUnit();
 		term = termFact.TmAscribe(termFact.TmUnit(), ty);
-		assertTrue(ty.accept(tyEqual).tyEqv(term.accept(typeof).apply(ctx)));
-		assertFalse(bool.accept(tyEqual).tyEqv(term.accept(typeof).apply(ctx)));
+		assertTrue(ty.accept(tyEqual).tyEqv(term.accept(typeof).typeof(ctx)));
+		assertFalse(bool.accept(tyEqual).tyEqv(term.accept(typeof).typeof(ctx)));
 	}
 }

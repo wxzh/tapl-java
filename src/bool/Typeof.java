@@ -1,45 +1,43 @@
 package bool;
 
-import java.util.function.Function;
-
 import bool.termalg.shared.TermAlgQuery;
 import bool.tyalg.external.TyAlgMatcher;
 import bool.tyalg.shared.GTyAlg;
 import library.Zero;
-import utils.Context;
+import utils.ITypeof;
 import utils.TypeError;
 
-public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Function<Context<Bind>, Ty>> {
+public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, ITypeof<Ty, Bind>> {
 	GTyAlg<Ty, Ty> tyAlg();
 	TyAlgMatcher<Ty, Ty> tyMatcher();
 	TyEqv<Ty> tyEqv();
 
 	@Override
-	default Zero<Function<Context<Bind>, Ty>> m() {
+	default Zero<ITypeof<Ty, Bind>> m() {
 		throw new TypeError();
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmIf(Term t1, Term t2, Term t3) {
+	default ITypeof<Ty, Bind> TmIf(Term t1, Term t2, Term t3) {
 		return ctx -> {
-			Ty ty1 = visitTerm(t1).apply(ctx);
+			Ty ty1 = visitTerm(t1).typeof(ctx);
 			if (tyEqv().visitTy(ty1).tyEqv(tyAlg().TyBool())) {
-				Ty ty2 = visitTerm(t2).apply(ctx);
-				Ty ty3 = visitTerm(t3).apply(ctx);
+				Ty ty2 = visitTerm(t2).typeof(ctx);
+				Ty ty3 = visitTerm(t3).typeof(ctx);
 				if (tyEqv().visitTy(ty2).tyEqv(ty3))
 					return ty2;
 			}
-			return m().empty().apply(ctx);
+			return m().empty().typeof(ctx);
 		};
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmTrue() {
+	default ITypeof<Ty, Bind> TmTrue() {
 		return ctx -> tyAlg().TyBool();
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmFalse() {
+	default ITypeof<Ty, Bind> TmFalse() {
 		return ctx -> tyAlg().TyBool();
 	}
 }

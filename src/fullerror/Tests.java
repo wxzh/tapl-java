@@ -28,6 +28,7 @@ import utils.IJoin;
 import utils.IMeet;
 import utils.ISubtype;
 import utils.ITyEqv;
+import utils.ITypeof;
 
 public class Tests {
 	class PrintTyImpl implements PrintTy<Ty, Bind<Ty>>, TyVisitor<Function<Context<Bind<Ty>>, String>> {
@@ -114,7 +115,7 @@ public class Tests {
 	}
 
 
-	class TypeofImpl implements Typeof<Term<Ty>, Ty, Bind<Ty>>, TermVisitor<Function<Context<Bind<Ty>>, Ty>, Ty> {
+	class TypeofImpl implements Typeof<Term<Ty>, Ty, Bind<Ty>>, TermVisitor<ITypeof<Ty, Bind<Ty>>, Ty> {
 		@Override
 		public GBindingAlg<Bind<Ty>, Ty, Bind<Ty>> bindAlg() {
 			return bindFact;
@@ -230,7 +231,7 @@ public class Tests {
 
 	@Test
 	public void typeofTest() {
-		assertTrue(bot.accept(tyEqv).tyEqv(error.accept(typeof).apply(ctx)));
+		assertTrue(bot.accept(tyEqv).tyEqv(error.accept(typeof).typeof(ctx)));
 //		assertTrue(tyEqv"error", error.accept(printTerm).apply(ctx));
 //		assertEquals("try error with true", tryErrorWithTrue.accept(printTerm).apply(ctx));
 	}

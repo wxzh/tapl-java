@@ -1,13 +1,11 @@
 package fullerror;
 
-import java.util.function.Function;
-
-import fullerror.termalg.shared.TermAlgQuery;
+import fullerror.termalg.shared.GTermAlg;
 import fullerror.tyalg.external.TyAlgMatcher;
 import fullerror.tyalg.shared.GTyAlg;
-import utils.Context;
+import utils.ITypeof;
 
-public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<Context<Bind>, Ty>>, simplebool.Typeof<Term, Ty, Bind>, bot.Typeof<Term, Ty, Bind> {
+public interface Typeof<Term, Ty, Bind> extends GTermAlg<Term, Ty, ITypeof<Ty, Bind>>, simplebool.Typeof<Term, Ty, Bind>, bot.Typeof<Term, Ty, Bind> {
 	@Override
 	Subtype<Ty> subtype();
 	JoinMeet<Ty> joinMeet();
@@ -17,28 +15,28 @@ public interface Typeof<Term, Ty, Bind> extends TermAlgQuery<Term, Ty, Function<
 	GTyAlg<Ty, Ty> tyAlg();
 
 	@Override
-	default Function<Context<Bind>, Ty> TmIf(Term t1, Term t2, Term t3) {
+	default ITypeof<Ty, Bind> TmIf(Term t1, Term t2, Term t3) {
 		return ctx -> {
-			Ty ty1 = visitTerm(t1).apply(ctx);
+			Ty ty1 = visitTerm(t1).typeof(ctx);
 			if (subtype().subtype(ty1, tyAlg().TyBool())) {
-				Ty ty2 = visitTerm(t2).apply(ctx);
-				Ty ty3 = visitTerm(t3).apply(ctx);
+				Ty ty2 = visitTerm(t2).typeof(ctx);
+				Ty ty3 = visitTerm(t3).typeof(ctx);
 				return joinMeet().join(ty2, ty3);
 			}
-			return m().empty().apply(ctx);
+			return m().empty().typeof(ctx);
 		};
 	}
 
 	@Override
-	default Function<Context<Bind>,Ty> TmError() {
+	default ITypeof<Ty, Bind> TmError() {
 		return ctx -> tyAlg().TyBot();
 	}
 
 	@Override
-	default Function<Context<Bind>, Ty> TmTry(Term t1, Term t2) {
+	default ITypeof<Ty, Bind> TmTry(Term t1, Term t2) {
 		return ctx -> {
-			Ty ty1 = visitTerm(t1).apply(ctx);
-			Ty ty2 = visitTerm(t2).apply(ctx);
+			Ty ty1 = visitTerm(t1).typeof(ctx);
+			Ty ty2 = visitTerm(t2).typeof(ctx);
 			return joinMeet().join(ty1, ty2);
 		};
 	}
