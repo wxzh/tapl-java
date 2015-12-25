@@ -20,7 +20,7 @@ public interface Meet<Ty> extends TyAlgQuery<Ty, IMeet<Ty>>, JoinMeet<Ty>, typed
 					List<Tuple2<String, Ty>> allFields = allLabels.stream().map(l -> {
 						Ty tyS = fS.stream().filter(pr -> pr._1.equals(l)).findFirst().map(pr -> pr._2).get();
 						Ty tyT = fT.stream().filter(pr -> pr._1.equals(l)).findFirst().map(pr -> pr._2).get();
-						return new Tuple2<>(l, join(tyS, tyT));
+						return new Tuple2<>(l, meet(tyS, tyT));
 					}).collect(Collectors.toList());
 					return alg().TyRecord(allFields);
 				})
