@@ -11,15 +11,15 @@ import java.util.function.Function;
 import org.junit.Test;
 
 import fulluntyped.bindingalg.external.Bind;
-import fulluntyped.bindingalg.external.BindVisitor;
 import fulluntyped.bindingalg.external.BindingAlgFactory;
 import fulluntyped.bindingalg.external.BindingAlgMatcher;
 import fulluntyped.bindingalg.external.BindingAlgMatcherImpl;
+import fulluntyped.bindingalg.external.BindingAlgVisitor;
 import fulluntyped.termalg.external.Term;
 import fulluntyped.termalg.external.TermAlgFactory;
 import fulluntyped.termalg.external.TermAlgMatcher;
 import fulluntyped.termalg.external.TermAlgMatcherImpl;
-import fulluntyped.termalg.external.TermVisitor;
+import fulluntyped.termalg.external.TermAlgVisitor;
 import fulluntyped.termalg.shared.GTermAlg;
 import library.Tuple2;
 import utils.Context;
@@ -29,14 +29,14 @@ import varapp.TmMapCtx;
 
 public class Tests {
 	// compiler bug? should not have conflicts
-	class PrintImpl implements Print<Term, Bind<Term>>, TermVisitor<IPrint<Bind<Term>>> {
+	class PrintImpl implements Print<Term, Bind<Term>>, TermAlgVisitor<IPrint<Bind<Term>>> {
 		public TermAlgMatcher<Term, String> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
 
 		@Override
 		public IPrint<Bind<Term>> visitTerm(Term e) {
-			return TermVisitor.super.visitTerm(e);
+			return TermAlgVisitor.super.visitTerm(e);
 		}
 
 		@Override
@@ -46,22 +46,22 @@ public class Tests {
 	}
 
 	class PrintBindImpl implements PrintBind<Bind<Term>, Term>,
-			BindVisitor<IPrint<Bind<Term>>, Term> {
+			BindingAlgVisitor<IPrint<Bind<Term>>, Term> {
 		@Override
 		public Print<Term, Bind<Term>> printTerm() {
 			return new PrintImpl();
 		}
 	}
 
-	class IsNumericValImpl implements IsNumericVal<Term>, TermVisitor<Boolean> {
+	class IsNumericValImpl implements IsNumericVal<Term>, TermAlgVisitor<Boolean> {
 	}
 
-	class IsValImpl implements fulluntyped.IsVal<Term>, TermVisitor<Boolean> {
+	class IsValImpl implements fulluntyped.IsVal<Term>, TermAlgVisitor<Boolean> {
 	}
 
 	class TermShiftAndSubstImpl implements TermShiftAndSubst<Term> {
 		class TmMapImpl implements TmMap<Term>,
-				TermVisitor<Function<TmMapCtx<Term>, Term>> {
+				TermAlgVisitor<Function<TmMapCtx<Term>, Term>> {
 			public GTermAlg<Term, Term> alg() {
 				return fact;
 			}
@@ -78,7 +78,7 @@ public class Tests {
 	}
 
 	abstract class Eval1Impl implements Eval1<Term, Bind<Term>>,
-			TermVisitor<Term> {
+			TermAlgVisitor<Term> {
 
 		@Override
 		public TermShiftAndSubst<Term> termShiftAndSubst() {

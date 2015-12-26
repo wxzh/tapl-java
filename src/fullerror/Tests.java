@@ -8,18 +8,18 @@ import org.junit.Test;
 
 import fullerror.termalg.external.Term;
 import fullerror.termalg.external.TermAlgFactory;
-import fullerror.termalg.external.TermVisitor;
+import fullerror.termalg.external.TermAlgVisitor;
 import fullerror.tyalg.external.Ty;
 import fullerror.tyalg.external.TyAlgFactory;
 import fullerror.tyalg.external.TyAlgMatcher;
 import fullerror.tyalg.external.TyAlgMatcherImpl;
-import fullerror.tyalg.external.TyVisitor;
+import fullerror.tyalg.external.TyAlgVisitor;
 import fullerror.tyalg.shared.GTyAlg;
 import typed.GetTypeFromBind;
 import typed.PrintBind;
 import typed.bindingalg.external.Bind;
-import typed.bindingalg.external.BindVisitor;
 import typed.bindingalg.external.BindingAlgFactory;
+import typed.bindingalg.external.BindingAlgVisitor;
 import typed.bindingalg.shared.GBindingAlg;
 import utils.Context;
 import utils.IJoin;
@@ -30,11 +30,11 @@ import utils.ITyEqv;
 import utils.ITypeof;
 
 public class Tests {
-	class PrintTyImpl implements PrintTy<Ty, Bind<Ty>>, TyVisitor<IPrint<Bind<Ty>>> {
+	class PrintTyImpl implements PrintTy<Ty, Bind<Ty>>, TyAlgVisitor<IPrint<Bind<Ty>>> {
 	}
 
 	class PrintBindImpl implements PrintBind<Bind<Ty>, Ty>,
-			BindVisitor<IPrint<Bind<Ty>>, Ty> {
+			BindingAlgVisitor<IPrint<Bind<Ty>>, Ty> {
 
 		@Override
 		public PrintTy<Ty, Bind<Ty>> printTy() {
@@ -42,7 +42,7 @@ public class Tests {
 		}
 	}
 
-	class PrintImpl implements Print<Term<Ty>, Ty, Bind<Ty>>, TermVisitor<IPrint<Bind<Ty>>, Ty> {
+	class PrintImpl implements Print<Term<Ty>, Ty, Bind<Ty>>, TermAlgVisitor<IPrint<Bind<Ty>>, Ty> {
 		@Override
 		public PrintTy<Ty, Bind<Ty>> printTy() {
 			return printTy;
@@ -54,7 +54,7 @@ public class Tests {
 		}
 	}
 
-	class TyEqvImpl implements TyEqv<Ty>, TyVisitor<ITyEqv<Ty>> {
+	class TyEqvImpl implements TyEqv<Ty>, TyAlgVisitor<ITyEqv<Ty>> {
 		@Override
 		public TyAlgMatcher<Ty, Boolean> matcher() {
 			return new TyAlgMatcherImpl<>();
@@ -72,7 +72,7 @@ public class Tests {
 			return tyEqv;
 		}
 
-		class SubtypeAlgImpl extends SubtypeImpl implements SubtypeAlg<Ty>, TyVisitor<ISubtype<Ty>> {
+		class SubtypeAlgImpl extends SubtypeImpl implements SubtypeAlg<Ty>, TyAlgVisitor<ISubtype<Ty>> {
 		}
 
 		@Override
@@ -81,7 +81,7 @@ public class Tests {
 		}
 	}
 
-	class GetTypeFromBindImpl implements GetTypeFromBind<Bind<Ty>, Ty>, BindVisitor<Ty, Ty> {}
+	class GetTypeFromBindImpl implements GetTypeFromBind<Bind<Ty>, Ty>, BindingAlgVisitor<Ty, Ty> {}
 
 	class JoinMeetImpl implements JoinMeet<Ty> {
 		@Override
@@ -99,8 +99,8 @@ public class Tests {
 			return tyFact;
 		}
 
-		class JoinImpl extends JoinMeetImpl implements Join<Ty>, TyVisitor<IJoin<Ty>> {}
-		class MeetImpl extends JoinMeetImpl implements Meet<Ty>, TyVisitor<IMeet<Ty>> {}
+		class JoinImpl extends JoinMeetImpl implements Join<Ty>, TyAlgVisitor<IJoin<Ty>> {}
+		class MeetImpl extends JoinMeetImpl implements Meet<Ty>, TyAlgVisitor<IMeet<Ty>> {}
 
 		@Override
 		public Meet<Ty> meet() {
@@ -114,7 +114,7 @@ public class Tests {
 	}
 
 
-	class TypeofImpl implements Typeof<Term<Ty>, Ty, Bind<Ty>>, TermVisitor<ITypeof<Ty, Bind<Ty>>, Ty> {
+	class TypeofImpl implements Typeof<Term<Ty>, Ty, Bind<Ty>>, TermAlgVisitor<ITypeof<Ty, Bind<Ty>>, Ty> {
 		@Override
 		public GBindingAlg<Bind<Ty>, Ty, Bind<Ty>> bindAlg() {
 			return bindFact;

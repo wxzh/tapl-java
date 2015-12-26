@@ -10,18 +10,18 @@ import java.util.Optional;
 import org.junit.Test;
 
 import fullsimple.bindingalg.external.Bind;
-import fullsimple.bindingalg.external.BindVisitor;
 import fullsimple.bindingalg.external.BindingAlgFactory;
+import fullsimple.bindingalg.external.BindingAlgVisitor;
 import fullsimple.bindingalg.shared.GBindingAlg;
 import fullsimple.termalg.external.Term;
 import fullsimple.termalg.external.TermAlgFactory;
 import fullsimple.termalg.external.TermAlgMatcherImpl;
-import fullsimple.termalg.external.TermVisitor;
+import fullsimple.termalg.external.TermAlgVisitor;
 import fullsimple.tyalg.external.Ty;
 import fullsimple.tyalg.external.TyAlgFactory;
 import fullsimple.tyalg.external.TyAlgMatcher;
 import fullsimple.tyalg.external.TyAlgMatcherImpl;
-import fullsimple.tyalg.external.TyVisitor;
+import fullsimple.tyalg.external.TyAlgVisitor;
 import fullsimple.tyalg.shared.GTyAlg;
 import library.Tuple2;
 import library.Tuple3;
@@ -32,7 +32,7 @@ import utils.ITypeof;
 
 public class Tests {
 	class PrintImpl implements Print<Term<Ty>, Ty, Bind<Term<Ty>, Ty>>,
-			TermVisitor<IPrint<Bind<Term<Ty>, Ty>>, Ty> {
+			TermAlgVisitor<IPrint<Bind<Term<Ty>, Ty>>, Ty> {
 
 		@Override
 		public PrintBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty> printBind() {
@@ -51,11 +51,11 @@ public class Tests {
 	}
 
 	class PrintTyImpl implements PrintTy<Ty, Bind<Term<Ty>, Ty>>,
-			TyVisitor<IPrint<Bind<Term<Ty>, Ty>>> {
+			TyAlgVisitor<IPrint<Bind<Term<Ty>, Ty>>> {
 	}
 
 	class PrintBindImpl implements PrintBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty>,
-			BindVisitor<IPrint<Bind<Term<Ty>, Ty>>, Term<Ty>, Ty> {
+			BindingAlgVisitor<IPrint<Bind<Term<Ty>, Ty>>, Term<Ty>, Ty> {
 
 		@Override
 		public PrintTy<Ty, Bind<Term<Ty>, Ty>> printTy() {
@@ -69,10 +69,10 @@ public class Tests {
 	}
 
 	class GetTypeFromBindImpl
-			implements GetTypeFromBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty>, BindVisitor<Ty, Term<Ty>, Ty> {
+			implements GetTypeFromBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty>, BindingAlgVisitor<Ty, Term<Ty>, Ty> {
 	}
 
-	class TyEqvImpl implements TyEqv<Ty>, TyVisitor<ITyEqv<Ty>> {
+	class TyEqvImpl implements TyEqv<Ty>, TyAlgVisitor<ITyEqv<Ty>> {
 		@Override
 		public TyAlgMatcher<Ty, Boolean> matcher() {
 			return new TyAlgMatcherImpl<>();
@@ -80,7 +80,7 @@ public class Tests {
 	}
 
 	class TypeofImpl implements Typeof<Term<Ty>, Ty, Bind<Term<Ty>, Ty>>,
-			TermVisitor<ITypeof<Ty, Bind<Term<Ty>, Ty>>, Ty> {
+			TermAlgVisitor<ITypeof<Ty, Bind<Term<Ty>, Ty>>, Ty> {
 		@Override
 		public GetTypeFromBind<Bind<Term<Ty>, Ty>, Term<Ty>, Ty> getTypeFromBind() {
 			return new GetTypeFromBindImpl();

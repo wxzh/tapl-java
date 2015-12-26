@@ -10,7 +10,7 @@ import arith.termalg.external.Term;
 import arith.termalg.external.TermAlgFactory;
 import arith.termalg.external.TermAlgMatcher;
 import arith.termalg.external.TermAlgMatcherImpl;
-import arith.termalg.external.TermVisitor;
+import arith.termalg.external.TermAlgVisitor;
 import arith.termalg.shared.GTermAlg;
 import utils.Context;
 import utils.Eval;
@@ -21,19 +21,19 @@ import utils.bindingalg.external.BindingAlgFactory;
 
 public class Tests {
 
-	class IsNumericalValImpl implements IsNumericVal<Term>, TermVisitor<Boolean> {
+	class IsNumericalValImpl implements IsNumericVal<Term>, TermAlgVisitor<Boolean> {
 	}
 
-	class IsValImpl implements IsVal<Term>, TermVisitor<Boolean> {
+	class IsValImpl implements IsVal<Term>, TermAlgVisitor<Boolean> {
 	}
 
-	class PrintImpl implements Print<Term, Bind>, TermVisitor<IPrint<Bind>> {
+	class PrintImpl implements Print<Term, Bind>, TermAlgVisitor<IPrint<Bind>> {
 		public TermAlgMatcher<Term, String> matcher() {
 			return new TermAlgMatcherImpl<>();
 		}
 	}
 
-	class Eval1Impl implements Eval1<Term>, TermVisitor<Term> {
+	class Eval1Impl implements Eval1<Term>, TermAlgVisitor<Term> {
 		public GTermAlg<Term, Term> alg() {
 			return alg;
 		}
