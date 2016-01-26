@@ -1,8 +1,8 @@
 package arith;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term> extends bool.TermAlg<Term>, nat.TermAlg<Term> {
 	Term TmIsZero(Term t);
 }

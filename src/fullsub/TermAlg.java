@@ -1,7 +1,7 @@
 package fullsub;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term, Ty> extends typed.TermAlg<Term, Ty>, moreextension.TermAlg<Term, Ty> {
 }

@@ -1,8 +1,8 @@
 package fulluntyped;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface BindingAlg<Bind, Term> extends utils.BindingAlg<Bind> {
 	Bind TmAbbBind(Term t);
 }

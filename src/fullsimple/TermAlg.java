@@ -1,7 +1,7 @@
 package fullsimple;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term, Ty> extends variant.TermAlg<Term, Ty>, moreextension.TermAlg<Term, Ty> {
 }

@@ -1,8 +1,8 @@
 package fullref;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term, Ty> extends fullsimple.TermAlg<Term, Ty> {
 	Term TmLoc(int l);
 	Term TmRef(Term t);

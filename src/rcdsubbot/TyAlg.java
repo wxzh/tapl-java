@@ -1,7 +1,7 @@
 package rcdsubbot;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> extends bot.TyAlg<Ty>, record.TyAlg<Ty>{
 }

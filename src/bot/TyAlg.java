@@ -1,8 +1,8 @@
 package bot;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> extends top.TyAlg<Ty> {
 	Ty TyBot();
 }

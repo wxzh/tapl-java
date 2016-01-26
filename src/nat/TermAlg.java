@@ -1,8 +1,8 @@
 package nat;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term> {
 	Term TmZero();
 	Term TmSucc(Term t);

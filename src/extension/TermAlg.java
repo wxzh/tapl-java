@@ -1,8 +1,8 @@
 package extension;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term> extends varapp.TermAlg<Term>, arith.TermAlg<Term>, record.TermAlg<Term> {
 	Term TmFloat(float f);
 	Term TmTimesFloat(Term t1, Term t2);

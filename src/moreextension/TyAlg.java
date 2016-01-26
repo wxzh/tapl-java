@@ -1,8 +1,8 @@
 package moreextension;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> extends extension.TyAlg<Ty> {
 	Ty TyUnit();
 }

@@ -1,8 +1,8 @@
 package top;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> extends typed.TyAlg<Ty> {
 	Ty TyTop();
 }

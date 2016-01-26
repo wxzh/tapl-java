@@ -1,9 +1,8 @@
 package typed;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> {
 	Ty TyArr(Ty ty1, Ty ty2);
 }
-

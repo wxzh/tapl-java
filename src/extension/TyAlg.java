@@ -1,8 +1,8 @@
 package extension;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> extends tyarith.TyAlg<Ty>, record.TyAlg<Ty> {
 	Ty TyFloat();
 	Ty TyString();

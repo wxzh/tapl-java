@@ -1,7 +1,7 @@
 package fullsub;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> extends moreextension.TyAlg<Ty>, top.TyAlg<Ty> {
 }

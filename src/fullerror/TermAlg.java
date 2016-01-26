@@ -1,8 +1,8 @@
 package fullerror;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term, Ty> extends simplebool.TermAlg<Term, Ty> {
 	Term TmError();
 	Term TmTry(Term t1, Term t2);

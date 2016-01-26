@@ -1,8 +1,8 @@
 package utils;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface BindingAlg<Bind> {
 	Bind NameBind();
 }

@@ -1,8 +1,8 @@
 package untyped;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term> extends varapp.TermAlg<Term> {
 	Term TmAbs(String x, Term t);
 }

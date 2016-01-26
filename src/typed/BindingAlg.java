@@ -1,8 +1,8 @@
 package typed;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface BindingAlg<Bind, Ty> extends utils.BindingAlg<Bind> {
 	Bind VarBind(Ty ty);
 }

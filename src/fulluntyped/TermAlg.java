@@ -1,7 +1,7 @@
 package fulluntyped;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term> extends untyped.TermAlg<Term>, extension.TermAlg<Term> {
 }

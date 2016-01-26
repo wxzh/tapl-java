@@ -2,10 +2,10 @@ package variant;
 
 import java.util.List;
 
-import annotation.Free;
+import annotation.Visitor;
 import library.Tuple2;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> extends typed.TyAlg<Ty> {
 	Ty TyVariant(List<Tuple2<String, Ty>> els);
 }

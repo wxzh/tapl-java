@@ -1,8 +1,8 @@
 package bool;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TyAlg<Ty> {
 	Ty TyBool();
 }

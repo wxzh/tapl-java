@@ -1,8 +1,8 @@
 package moreextension;
 
-import annotation.Free;
+import annotation.Visitor;
 
-@Free
+@Visitor
 public interface TermAlg<Term, Ty> extends extension.TermAlg<Term> {
 	Term TmFix(Term t);
 	Term TmUnit();
