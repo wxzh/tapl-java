@@ -8,7 +8,7 @@
 - ~~tyarith~~ (chapter 8)
 - ~~simplebool~~ (chapter 10)
 - ~~fullsimple~~ (chapter 9 and 11)
-- `fullref` (chapter 13, 18)
+- ~~fullref~~ (chapter 13, 18)
 - ~~fullerror~~ (chapter 14)
 - ~~rcdsubbot~~ (chapter 15)
 - ~~fullsub~~ (chapters 15 - 17)
