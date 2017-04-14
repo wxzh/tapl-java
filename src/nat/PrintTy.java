@@ -1,9 +1,9 @@
 package nat;
 
-import tyarith.tyalg.shared.GTyAlg;
+import nat.tyalg.shared.GTyAlg;
 import utils.IPrint;
 
-public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>>, bool.PrintTy<Ty, Bind> {
+public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>> {
 	default IPrint<Bind> TyNat() {
 		return ctx -> "Nat";
 	}

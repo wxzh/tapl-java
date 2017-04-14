@@ -9,8 +9,7 @@ import utils.IPrint;
 import variant.tyalg.shared.GTyAlg;
 
 public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>>, typed.PrintTy<Ty, Bind> {
-	@Override
-	default IPrint<Bind> TyVariant(List<Tuple2<String, Ty>> fields) {
+	@Override default IPrint<Bind> TyVariant(List<Tuple2<String, Ty>> fields) {
 		return ctx -> "<" + IntStream.range(0, fields.size()).mapToObj(i -> {
 			String label = fields.get(i)._1;
 			Ty ty = fields.get(i)._2;

@@ -1,22 +1,17 @@
 package bool;
 
+import bool.termalg.shared.GTermAlg;
 
-import bool.termalg.shared.TermAlgQuery;
-import library.Zero;
-
-public interface IsVal<Term> extends TermAlgQuery<Term, Boolean> {
-	@Override
-	default Zero<Boolean> m() {
-		return () -> false;
-	}
-
-	@Override
+public interface IsVal<Term> extends GTermAlg<Term, Boolean> {
 	default Boolean TmTrue() {
 		return true;
 	}
 
-	@Override
 	default Boolean TmFalse() {
 		return true;
+	}
+
+	default Boolean TmIf(Term t1, Term t2, Term t3) {
+	  return false;
 	}
 }

@@ -1,8 +1,7 @@
 package fulluntyped;
 
-import fulluntyped.termalg.shared.G_TermAlgTransform;
-import varapp.TmMapCtx;
+import fulluntyped.termalg.shared.TermAlgTransformWithCtx;
+import utils.TmMapCtx;
 
-public interface TmMap<Term> extends G_TermAlgTransform<TmMapCtx<Term>, Term>, untyped.TmMap<Term> {
-	// let
+public interface TmMap<Term> extends TermAlgTransformWithCtx<TmMapCtx<Term>, Term>, untyped.TmMap<Term> {
 }

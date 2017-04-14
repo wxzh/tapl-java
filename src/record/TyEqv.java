@@ -7,12 +7,10 @@ import record.tyalg.external.TyAlgMatcher;
 import record.tyalg.shared.GTyAlg;
 import utils.ITyEqv;
 
-public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>, typed.TyEqv<Ty> {
-	@Override
+public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>> {
 	TyAlgMatcher<Ty, Boolean> matcher();
 
-	@Override
-	default ITyEqv<Ty> TyRecord(List<Tuple2<String, Ty>> fields1) {
+	@Override default ITyEqv<Ty> TyRecord(List<Tuple2<String, Ty>> fields1) {
 		return ty -> matcher()
 				.TyRecord(
 						fields2 -> fields1.size() == fields2.size()

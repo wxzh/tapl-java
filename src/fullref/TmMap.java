@@ -1,7 +1,7 @@
 package fullref;
 
-import fullref.termalg.shared.G_TermAlgTransform;
-import varapp.TmMapCtx;
+import fullref.termalg.shared.TermAlgTransformWithCtx;
+import utils.TmMapCtx;
 
-public interface TmMap<Term, Ty> extends G_TermAlgTransform<TmMapCtx<Term>, Term, Ty>, fullsimple.TmMap<Term, Ty> {
+public interface TmMap<Term, Ty> extends TermAlgTransformWithCtx<TmMapCtx<Term>, Term, Ty>, fullsimple.TmMap<Term, Ty> {
 }

@@ -1,7 +1,6 @@
 package fullsub;
 
-import fullsub.termalg.shared.G_TermAlgTransform;
-import varapp.TmMapCtx;
+import fullsub.termalg.shared.TermAlgTransformWithCtx;
+import utils.TmMapCtx;
 
-public interface TmMap<Term, Ty> extends G_TermAlgTransform<TmMapCtx<Term>, Term, Ty>, moreextension.TmMap<Term>, typed.TmMap<Term, Ty> {
-}
+public interface TmMap<Term, Ty> extends TermAlgTransformWithCtx<TmMapCtx<Term>, Term, Ty>, typed.TmMap<Term, Ty> {}

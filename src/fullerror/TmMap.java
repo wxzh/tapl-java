@@ -1,8 +1,7 @@
 package fullerror;
 
-import fullerror.termalg.shared.G_TermAlgTransform;
-import varapp.TmMapCtx;
+import fullerror.termalg.shared.TermAlgTransformWithCtx;
+import utils.TmMapCtx;
 
-public interface TmMap<Term, Ty> extends
-		G_TermAlgTransform<TmMapCtx<Term>, Term, Ty>, simplebool.TmMap<Term, Ty>{
+public interface TmMap<Term, Ty> extends TermAlgTransformWithCtx<TmMapCtx<Term>, Term, Ty>, simplebool.TmMap<Term, Ty> {
 }

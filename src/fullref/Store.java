@@ -22,8 +22,4 @@ public class Store<Term> {
 	public void update(int n, Term t) {
 		l.set(n, t);
 	}
-
-//	public void shift(int n) {
-//		l.forEach(t -> termShift(n));
-//	}
 }

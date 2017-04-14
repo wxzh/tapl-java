@@ -8,12 +8,10 @@ import library.Tuple2;
 import utils.ITyEqv;
 import variant.tyalg.external.TyAlgMatcher;
 
-public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>>, typed.TyEqv<Ty> {
-	@Override
+public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>> {
 	TyAlgMatcher<Ty, Boolean> matcher();
 
-	@Override
-	default ITyEqv<Ty> TyVariant(List<Tuple2<String, Ty>> fields1) {
+	@Override default ITyEqv<Ty> TyVariant(List<Tuple2<String, Ty>> fields1) {
 		return ty -> matcher().TyVariant(
 				fields2 -> fields1.size() == fields2.size() && IntStream.range(0, fields1.size()).mapToObj(i -> {
 					String l1 = fields1.get(i)._1;

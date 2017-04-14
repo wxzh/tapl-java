@@ -9,7 +9,6 @@ import java.util.stream.IntStream;
 import library.Tuple2;
 import utils.bindingalg.shared.GBindingAlg;
 
-// should be pure
 public class Context<Bind> {
 	protected List<Tuple2<String, Bind>> binds;
 	protected GBindingAlg<Bind, Bind> alg;

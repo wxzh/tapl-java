@@ -1,10 +1,9 @@
 package typed;
 
-import simplebool.termalg.shared.TermAlgQuery;
+import typed.termalg.shared.GTermAlg;
 
-public interface IsVal<Term, Ty> extends TermAlgQuery<Term, Ty, Boolean>, varapp.IsVal<Term> {
-	@Override
-	default Boolean TmAbs(String p1, Ty p2, Term p3) {
+public interface IsVal<Term, Ty> extends GTermAlg<Term, Ty, Boolean>, varapp.IsVal<Term> {
+	@Override default Boolean TmAbs(String x, Ty ty, Term t) {
 		return true;
 	}
 }

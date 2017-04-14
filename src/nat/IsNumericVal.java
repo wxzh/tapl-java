@@ -1,11 +1,10 @@
 package nat;
 
 import library.Zero;
-import nat.termalg.shared.TermAlgQuery;
+import nat.termalg.shared.TermAlgDefault;
 
-public interface IsNumericVal<Term> extends TermAlgQuery<Term, Boolean> {
-	@Override
-	default Zero<Boolean> m() {
+public interface IsNumericVal<Term> extends TermAlgDefault<Term, Boolean> {
+	@Override default Zero<Boolean> m() {
 		return () -> false;
 	}
 
