@@ -1,6 +1,6 @@
-package literal;
+package floatstring;
 
-import literal.termalg.shared.GTermAlg;
+import floatstring.termalg.shared.GTermAlg;
 import utils.IPrint;
 
 public interface Print<Term, Bind> extends GTermAlg<Term, IPrint<Bind>> {

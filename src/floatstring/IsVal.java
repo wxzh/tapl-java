@@ -1,6 +1,6 @@
-package literal;
+package floatstring;
 
-import literal.termalg.shared.GTermAlg;
+import floatstring.termalg.shared.GTermAlg;
 
 public interface IsVal<Term> extends GTermAlg<Term, Boolean> {
   default Boolean TmFloat(float p1) {

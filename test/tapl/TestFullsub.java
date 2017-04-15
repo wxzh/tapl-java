@@ -2,6 +2,7 @@ package tapl;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.function.Function;
@@ -50,7 +51,7 @@ import utils.TmMapCtx;
 public class TestFullsub {
 	class JoinMeetImpl implements JoinMeet<Ty> {
 	  public boolean subtype(Ty ty1, Ty ty2) {
-	    return subtype.visitTy(ty1).subtype(ty2);
+	    return typer.subtype(ty1, ty2);
 	  }
 
 		@Override public TyAlgMatcher<Ty, Ty> matcher() {
@@ -121,7 +122,7 @@ public class TestFullsub {
 		}
 
 		public boolean tyEqv(Ty ty1, Ty ty2) {
-			return tyEqv.visitTy(ty1).tyEqv(ty2);
+			return new TyEqvImpl().visitTy(ty1).tyEqv(ty2);
 		}
 
 		public TyAlgMatcher<Ty, Ty> tyMatcher() {
@@ -133,7 +134,7 @@ public class TestFullsub {
 		}
 
 		@Override public boolean subtype(Ty ty1, Ty ty2) {
-		  return subtype.visitTy(ty1).subtype(ty2);
+		  return new SubtypeImpl().subtype(ty1, ty2);
 		}
 	}
 
@@ -173,20 +174,19 @@ public class TestFullsub {
 	TermAlgFactory<Ty> tmFact = new TermAlgFactory<>();
 	TyAlgFactory tyFact = new TyAlgFactory();
 
-	SubtypeImpl subtype = new SubtypeImpl();
-	TyEqvImpl tyEqv = new TyEqvImpl();
 	PrintAll print = new PrintAll();
 	JoinMeetImpl joinMeet = new JoinMeetImpl();
-	TypeofImpl typeof = new TypeofImpl();
+	TypeofImpl typer = new TypeofImpl();
 
 	BindingAlgFactory<Term<Ty>,Ty> bindFact = new BindingAlgFactory<>();
 	Context<Bind<Term<Ty>,Ty>> ctx = new Context<Bind<Term<Ty>,Ty>>(bindFact);
 
 	Ty top = tyFact.TyTop();
 	Ty top2top = tyFact.TyArr(top, top);
+	Ty bool = tyFact.TyBool();
 	Ty ty_rcd = tyFact.TyRecord(asList(new Tuple2<>("x", top2top)));
-	Ty rcd1 = tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("y", tyFact.TyBool())));
-	Ty rcd2 = tyFact.TyRecord(asList(new Tuple2<>("y", tyFact.TyBool()), new Tuple2<>("x", top)));
+	Ty rcd1 = tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("y", bool)));
+	Ty rcd2 = tyFact.TyRecord(asList(new Tuple2<>("y", bool), new Tuple2<>("x", top)));
 
 	Term<Ty> var = tmFact.TmVar(0, 1);
 	Term<Ty> id = tmFact.TmAbs("x", top, var);
@@ -194,7 +194,8 @@ public class TestFullsub {
 	Term<Ty> id_app_id = tmFact.TmApp(id, id);
 	Term<Ty> id_top2top_app_id = tmFact.TmApp(id_top2top, id);
 	Term<Ty> id_rcd = tmFact.TmAbs("r", ty_rcd, tmFact.TmApp(tmFact.TmProj(var, "x"), tmFact.TmProj(var, "x")));
-	Term<Ty> id_rcd_app_rcd = tmFact.TmApp(id_rcd, tmFact.TmRecord(asList(new Tuple2<>("x", id), new Tuple2<>("y", id))));
+	Term<Ty> rcd = tmFact.TmRecord(asList(new Tuple2<>("x", id), new Tuple2<>("y", id)));
+	Term<Ty> id_rcd_app_rcd = tmFact.TmApp(id_rcd, rcd);
 
 	Term<Ty> t = tmFact.TmTrue();
 	Term<Ty> f = tmFact.TmFalse();
@@ -209,39 +210,59 @@ public class TestFullsub {
 		assertEquals("lambda x:(Top -> Top). x", print.printTerm(id_top2top, ctx));
 		assertEquals("lambda r:{x:(Top -> Top)}. r.x r.x {x=lambda x:Top. x,y=lambda x:Top. x}", print.printTerm(id_rcd_app_rcd, ctx));
 		assertEquals("if true then {x=true,y=false,a=false} else {y=false,x={},b=false}", print.printTerm(if_rcd,ctx));
+		assertEquals("({x:(Top -> Top)} -> Top)", print.printTy(id_rcd.accept(typer).typeof(ctx),ctx));
 	}
 
 
 	@Test
 	public void tyEqvRecordTest() {
-		assertTrue(rcd1.accept(tyEqv).tyEqv(rcd2));
-		assertTrue(rcd2.accept(tyEqv).tyEqv(rcd1));
+		assertTrue(typer.tyEqv(rcd1, rcd2));
+		assertTrue(typer.tyEqv(rcd2, rcd1));
 	}
 
 	@Test
 	public void subtypeRecordTest() {
-		assertTrue(subtype.subtype(rcd1, rcd2));
-		assertTrue(subtype.subtype(rcd2, rcd1));
+	  // S-RcdTop
+		assertTrue(typer.subtype(rcd1, top));
+	  // S-RcdRefl
+		assertTrue(typer.subtype(rcd1, rcd1));
+		// S-RcdPerm
+		assertTrue(typer.subtype(rcd1, rcd2));
+		assertTrue(typer.subtype(rcd2, rcd1));
+	  // S-RcdDepth
+		assertTrue(typer.subtype(tyFact.TyRecord(asList(new Tuple2<>("x", bool), new Tuple2<>("y", bool))),
+		    tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("y", top)))));
+		assertFalse(typer.subtype(tyFact.TyRecord(asList(new Tuple2<>("x", bool), new Tuple2<>("y", top))),
+		    tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("y", bool)))));
+		// S-RcdWidth
+		assertTrue(typer.subtype(tyFact.TyRecord(asList(new Tuple2<>("x", bool))), tyFact.TyRecord(asList())));
+
+		// {x:{a:Bool,b:Bool},y:Bool} <: {x:{a:Bool}}
+		assertTrue(typer.subtype(tyFact.TyRecord(asList(new Tuple2<>("x",tyFact.TyRecord(asList(new Tuple2<>("a",bool), new Tuple2<>("b",bool)))), new Tuple2<>("y",bool))),
+		    tyFact.TyRecord(asList(new Tuple2<>("x", tyFact.TyRecord(asList(new Tuple2<>("a", bool))))))));
 	}
 
 	@Test
 	public void joinRecordTest() {
-	  System.out.println(print.printTy(joinMeet.join(rcd1, ty_rcd), ctx));
-		assertTrue(joinMeet.join(rcd1, ty_rcd).accept(tyEqv).tyEqv(tyFact.TyRecord(asList(new Tuple2<>("x", top)))));
+		assertTrue(typer.tyEqv(typer.join(rcd1, rcd1), rcd1));
+		assertTrue(typer.tyEqv(typer.join(rcd1, top2top), top));
+
+		Ty rcd = tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("z", tyFact.TyBool())));
+		assertTrue(typer.tyEqv(typer.join(rcd, rcd1), tyFact.TyRecord(asList(new Tuple2<>("x", top)))));
+		assertTrue(typer.tyEqv(
+		    typer.join(tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("z", tyFact.TyBool()))), rcd1),
+		    tyFact.TyRecord(asList(new Tuple2<>("x", top)))));
 	}
 
 	@Test
 	public void meetTest() {
-		assertTrue(tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("y", tyFact.TyBool()))).accept(tyEqv).tyEqv(if_rcd.accept(typeof).typeof(ctx)));
+		assertTrue(typer.tyEqv(tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("y", tyFact.TyBool()))), typer.visitTerm(if_rcd).typeof(ctx)));
 	}
 	@Test
 	public void typeofTest() {
-		assertTrue(top2top.accept(tyEqv).tyEqv(id.accept(typeof).typeof(ctx)));
-		assertTrue(tyFact.TyArr(top2top, top2top).accept(tyEqv).tyEqv(id_top2top.accept(typeof).typeof(ctx)));
-		assertTrue(top.accept(tyEqv).tyEqv(id_app_id.accept(typeof).typeof(ctx)));
-		assertTrue(top2top.accept(tyEqv).tyEqv(id_top2top_app_id.accept(typeof).typeof(ctx)));
-		assertTrue(tyFact.TyArr(ty_rcd, top).accept(tyEqv).tyEqv(id_rcd.accept(typeof).typeof(ctx)));
-//		assertTrue(tyFact.TyArr(ty_rcd, top).accept(tyEqv).tyEqv(if_rcd.accept(typeof).typeof(ctx)));
-		assertTrue(tyFact.TyRecord(asList(new Tuple2<>("x", top), new Tuple2<>("y", tyFact.TyBool()))).accept(tyEqv).tyEqv(if_rcd.accept(typeof).typeof(ctx)));
+		assertTrue(typer.tyEqv(top2top, id.accept(typer).typeof(ctx)));
+		assertTrue(typer.tyEqv(tyFact.TyArr(top2top, top2top), id_top2top.accept(typer).typeof(ctx)));
+		assertTrue(typer.tyEqv(top, id_app_id.accept(typer).typeof(ctx)));
+		assertTrue(typer.tyEqv(top2top, id_top2top_app_id.accept(typer).typeof(ctx)));
 	}
 }

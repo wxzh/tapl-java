@@ -1,7 +1,7 @@
-package literal;
+package floatstring;
 
-import literal.termalg.external.TermAlgMatcher;
-import literal.termalg.shared.GTermAlg;
+import floatstring.termalg.external.TermAlgMatcher;
+import floatstring.termalg.shared.GTermAlg;
 
 public interface Eval1<Term> extends GTermAlg<Term, Term>, utils.Eval1<Term> {
 	TermAlgMatcher<Term, Term> matcher();

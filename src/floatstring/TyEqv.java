@@ -1,7 +1,7 @@
-package literal;
+package floatstring;
 
-import literal.tyalg.external.TyAlgMatcher;
-import literal.tyalg.shared.GTyAlg;
+import floatstring.tyalg.external.TyAlgMatcher;
+import floatstring.tyalg.shared.GTyAlg;
 import utils.ITyEqv;
 
 public interface TyEqv<Ty> extends GTyAlg<Ty, ITyEqv<Ty>> {

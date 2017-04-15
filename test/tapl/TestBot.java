@@ -189,7 +189,6 @@ public class TestBot {
 		//  S1->S2 <: T1->T2
 		assertFalse(type.subtype(tyFact.TyArr(top, top), tyFact.TyArr(top, bot)));
 		assertTrue(type.subtype(tyFact.TyArr(top, top), tyFact.TyArr(bot, top)));
-		assertFalse(type.subtype(tyFact.TyArr(bot, bot), tyFact.TyArr(bot, bot)));
 		assertTrue(type.subtype(tyFact.TyArr(bot, bot), tyFact.TyArr(bot, top)));
 		assertTrue(type.subtype(tyFact.TyArr(top, bot), tyFact.TyArr(top, top)));
 	}

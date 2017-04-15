@@ -1,6 +1,6 @@
-package literal;
+package floatstring;
 
-import literal.tyalg.shared.GTyAlg;
+import floatstring.tyalg.shared.GTyAlg;
 import utils.IPrint;
 
 public interface PrintTy<Ty, Bind> extends GTyAlg<Ty, IPrint<Bind>> {

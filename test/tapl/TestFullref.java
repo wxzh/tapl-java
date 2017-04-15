@@ -115,7 +115,7 @@ public class TestFullref {
       return new GetTypeFromBindImpl().visitBind(bind);
     }
     public boolean subtype(Ty ty1, Ty ty2) {
-      return new SubtypeImpl().visitTy(ty1).subtype(ty2);
+      return new SubtypeImpl().subtype(ty1, ty2);
     }
     public GTyAlg<Ty, Ty> tyAlg() {
       return new TyAlgFactory();
@@ -185,6 +185,13 @@ public class TestFullref {
 
 	@Test
 	public void testTypeof() {
-		assertEquals("let x=ref 1 in {get=lambda _:Unit. !x,inc=lambda _:Unit. x := (succ !x)}", print.printTy(typer.visitTerm(term).typeof(ctx),ctx));
+	  assertEquals("Ref Nat",print.printTy(typer.visitTerm(tmFact.TmRef(one)).typeof(ctx),ctx));
+	  //TODO:
+	  //TySource
+	  //TySink
+    //let r = ref 1
+    //!r
+    //r := 0
+    // !r
 	}
 }

@@ -1,4 +1,4 @@
-package literal;
+package floatstring;
 
 import annotation.Visitor;
 
